@@ -44,7 +44,8 @@ public class BSCommunicator {
 
 	public String init() {
 		Socket clientSocket = null;
-		String sentence = QueryGenerator.INSTANCE.getBSRegister(nodeIP, nodePort, nodeUsername);
+		QueryGenerator queryGenerator = new QueryGenerator();
+		String sentence = queryGenerator.getBSRegister(nodeIP, nodePort, nodeUsername);
 		String modifiedSentence;
 		boolean attemptFailed = false;
 

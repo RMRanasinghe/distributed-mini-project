@@ -1,12 +1,7 @@
 package node;
 
 public class QueryGenerator {
-	public final static QueryGenerator INSTANCE = new QueryGenerator();
-
-	private QueryGenerator() {
-	}
-
-	public String getBSRegister(String IP, int port, String username) {
+	public synchronized String getBSRegister(String IP, int port, String username) {
 		return addLength("REG " + IP + " " + port + " " + username);
 	}
 

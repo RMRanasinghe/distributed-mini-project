@@ -12,15 +12,18 @@ public class Node {
 		log.info("Starting node");
 		BSCommunicator bsCommunicator = BSCommunicator.INSTANCE;
 		String out = bsCommunicator.init();
-		System.out.println(out);
+		
+		QueryParser qp = new QueryParser();
+		qp.parse(out);
+
+		/*Start node listner thread*/
+		NodeListner nodeListner = NodeListner.INSTANCE;
+		nodeListner.start();
 		
 		/*Start CLI Listner thread*/
 		CLIListner cliListner = CLIListner.INSTANCE;
 		cliListner.start();
 		
-		/*Start node listner thread*/
-		NodeListner nodeListner = NodeListner.INSTANCE;
-		nodeListner.start();
 	}
 	
 

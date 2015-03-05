@@ -1,5 +1,8 @@
 package node;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
 public class CLIListner implements Runnable {
@@ -12,7 +15,19 @@ public class CLIListner implements Runnable {
 	}
 
 	public void run() {
-		System.out.println("TODOOOOOO");
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String command = null;
+		while (true) {
+			System.out.print("node>>> ");
+			try {
+				command = br.readLine();
+			} catch (IOException ioe) {
+				System.out.println("Error getting input command. Retry");
+				break;
+			}
+		System.out.println(command +" sdflsjdlfs");
+		}
 	}
 
 	public void start() {

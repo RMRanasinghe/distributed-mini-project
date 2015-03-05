@@ -18,8 +18,8 @@ public class BSCommunicator {
 			.getName());
 	public final static BSCommunicator INSTANCE = new BSCommunicator();
 	private Properties properties = null;
-	private String BSAddress,nodeIP,nodeUsername;
-	private int BSPort,nodePort;
+	private String BSAddress, nodeIP, nodeUsername;
+	private int BSPort, nodePort;
 
 	private BSCommunicator() {
 		properties = new Properties();
@@ -36,32 +36,35 @@ public class BSCommunicator {
 		BSAddress = properties.getProperty("bs.internet.address");
 		BSPort = Integer.parseInt(properties.getProperty("bs.internet.port"));
 		nodeIP = properties.getProperty("node.internet.address");
-		nodePort = Integer.parseInt(properties.getProperty("node.internet.port"));
+		nodePort = Integer.parseInt(properties
+				.getProperty("node.internet.port"));
 		nodeUsername = properties.getProperty("node.username");
 	}
 
 	public String init() {
 		log.info("Initializing communication with boostrap server");
 		QueryGenerator queryGenerator = new QueryGenerator();
-		String query = queryGenerator.getBSRegister(nodeIP, nodePort, nodeUsername);
-		log.info("sending: "+query);
+		String query = queryGenerator.getBSRegister(nodeIP, nodePort,
+				nodeUsername);
+		log.info("sending: " + query);
 		String respond = sendandRecieve(query);
-		log.info("recieved: "+respond);
+		log.info("recieved: " + respond);
 		return respond;
 	}
-	
-	public String leave(){
+
+	public String leave() {
 		QueryGenerator queryGenerator = new QueryGenerator();
-		String query = queryGenerator.getBSUnRegister(nodeIP, nodePort, nodeUsername);
-		log.info("sending: "+query);
+		String query = queryGenerator.getBSUnRegister(nodeIP, nodePort,
+				nodeUsername);
+		log.info("sending: " + query);
 		String respond = sendandRecieve(query);
-		log.info("recieved: "+respond);
+		log.info("recieved: " + respond);
 		return respond;
 	}
-	
-	private String sendandRecieve(String query){
+
+	private String sendandRecieve(String query) {
 		Socket clientSocket = null;
-		String sentence = query+"\n";
+		String sentence = query + "\n";
 		String modifiedSentence;
 		boolean attemptFailed = false;
 
@@ -79,7 +82,9 @@ public class BSCommunicator {
 			System.out.println(sentence.length());
 			log.severe("Failed to connect boostrap server");
 			try {
-				clientSocket.close();
+				if (clientSocket != null) {
+					clientSocket.close();
+				}
 			} catch (IOException e1) {
 				log.warning("Closing the connection to boostrap server failed");
 			}

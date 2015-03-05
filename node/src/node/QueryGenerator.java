@@ -7,11 +7,14 @@ public class QueryGenerator {
 	public synchronized String getBSUnRegister(String IP, int port, String username) {
 		return addLength("UNREG " + IP + " " + port + " " + username);
 	}
-	public synchronized String getJOIN(String IP, int port) {
+	public synchronized String getJoin(String IP, int port) {
 		return addLength("JOIN " + IP + " " + port);
 	}
-	public synchronized String getLEAVE(String IP, int port) {
+	public synchronized String getLeave(String IP, int port) {
 		return addLength("LEAVE " + IP + " " + port);
+	}
+	public synchronized String getSearch(String IP, int port,String filename,int hops) {
+		return addLength("SER " + IP + " " + port + " " + filename + " " + hops);
 	}
 	private String addLength(String str) {
 		int length = str.length() + 6;

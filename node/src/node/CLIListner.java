@@ -22,11 +22,11 @@ public class CLIListner implements Runnable {
 			System.out.print("node>>> ");
 			try {
 				command = br.readLine();
+				//TODO: Dispatch commands
 			} catch (IOException ioe) {
 				System.out.println("Error getting input command. Retry");
 				break;
 			}
-		System.out.println(command +" sdflsjdlfs");
 		}
 	}
 

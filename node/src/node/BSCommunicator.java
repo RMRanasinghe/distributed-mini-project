@@ -38,14 +38,30 @@ public class BSCommunicator {
 		nodeIP = properties.getProperty("node.internet.address");
 		nodePort = Integer.parseInt(properties.getProperty("node.internet.port"));
 		nodeUsername = properties.getProperty("node.username");
-		
-		log.info("Boostrap server address and port loaded");
 	}
 
 	public String init() {
-		Socket clientSocket = null;
+		log.info("Initializing communication with boostrap server");
 		QueryGenerator queryGenerator = new QueryGenerator();
-		String sentence = queryGenerator.getBSRegister(nodeIP, nodePort, nodeUsername);
+		String query = queryGenerator.getBSRegister(nodeIP, nodePort, nodeUsername);
+		log.info("sending: "+query);
+		String respond = sendandRecieve(query);
+		log.info("recieved: "+respond);
+		return respond;
+	}
+	
+	public String leave(){
+		QueryGenerator queryGenerator = new QueryGenerator();
+		String query = queryGenerator.getBSUnRegister(nodeIP, nodePort, nodeUsername);
+		log.info("sending: "+query);
+		String respond = sendandRecieve(query);
+		log.info("recieved: "+respond);
+		return respond;
+	}
+	
+	private String sendandRecieve(String query){
+		Socket clientSocket = null;
+		String sentence = query+"\n";
 		String modifiedSentence;
 		boolean attemptFailed = false;
 
@@ -53,12 +69,14 @@ public class BSCommunicator {
 			clientSocket = new Socket(BSAddress, BSPort);
 			DataOutputStream outToServer = new DataOutputStream(
 					clientSocket.getOutputStream());
-			outToServer.writeBytes(sentence + '\n');
+			outToServer.writeBytes(sentence);
 
 		} catch (UnknownHostException e) {
 			log.severe("Connection to boostrap server failed");
 			System.exit(0);
 		} catch (IOException e) {
+			System.out.println(sentence);
+			System.out.println(sentence.length());
 			log.severe("Failed to connect boostrap server");
 			try {
 				clientSocket.close();
@@ -79,7 +97,7 @@ public class BSCommunicator {
 				modifiedSentence = inFromServer.readLine();
 				return modifiedSentence;
 			} catch (IOException e) {
-				log.severe("JOIN query error");
+				log.severe("Query error");
 			} finally {
 				try {
 					clientSocket.close();

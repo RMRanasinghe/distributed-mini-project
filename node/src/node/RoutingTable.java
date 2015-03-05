@@ -2,8 +2,6 @@ package node;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class RoutingTable {
@@ -15,19 +13,19 @@ public class RoutingTable {
 		routingTable = new HashSet<RoutingTableEntry>();
 	}
 
-	public void add(RoutingTableEntry entry) {
+	public synchronized void add(RoutingTableEntry entry) {
 		routingTable.add(entry);
 	}
 
-	public void add(Set<RoutingTableEntry> entries) {
+	public synchronized void add(Set<RoutingTableEntry> entries) {
 		routingTable.addAll(entries);
 	}
 
-	public Set<RoutingTableEntry> get() {
+	public synchronized Set<RoutingTableEntry> get() {
 		return routingTable;
 	}
 
-	public void remove(String ip) {
+	public synchronized void remove(String ip) {
 		Iterator<RoutingTableEntry> itr = routingTable.iterator();
 		RoutingTableEntry entry = null;
 		
@@ -42,7 +40,7 @@ public class RoutingTable {
 		}
 	}
 
-	public void remove(String ip, int port) {
+	public synchronized void remove(String ip, int port) {
 		Iterator<RoutingTableEntry> itr = routingTable.iterator();
 		RoutingTableEntry entry = null;
 		
@@ -57,7 +55,7 @@ public class RoutingTable {
 		}
 	}
 	
-	public void remove(String ip, int port, String username) {
+	public synchronized void remove(String ip, int port, String username) {
 		Iterator<RoutingTableEntry> itr = routingTable.iterator();
 		RoutingTableEntry entry = null;
 		

@@ -15,22 +15,35 @@ public class QueryExecutor {
 	int nodePort = Integer.parseInt(properties
 			.getProperty("node.internet.port"));
 	
-	public void regOKSuccess(String ip, int port, String username) {		
-		RoutingTableEntry entry = new RoutingTableEntry(ip, port, username);
+	public void regOKSuccess(String ip, int port) {		
+		RoutingTableEntry entry = new RoutingTableEntry(ip, port);
 		routingTable.add(entry);
 		
 		nodeCommunicator.send(ip, port,queryGenerator.getJoin(nodeIP, nodePort));
 	}
 
-	public void regOKSuccess(String ip1, int port1, String username1,
-			String ip2, int port2, String username2) {
+	public void regOKSuccess(String ip1, int port1,
+			String ip2, int port2) {
 		
-		RoutingTableEntry entry1 = new RoutingTableEntry(ip1, port1, username1);
-		RoutingTableEntry entry2 = new RoutingTableEntry(ip2, port2, username2);
+		RoutingTableEntry entry1 = new RoutingTableEntry(ip1, port1);
+		RoutingTableEntry entry2 = new RoutingTableEntry(ip2, port2);
 		routingTable.add(entry1);
 		routingTable.add(entry2);
 
 		nodeCommunicator.send(ip1, port1,queryGenerator.getJoin(nodeIP, nodePort));
 		nodeCommunicator.send(ip2, port2,queryGenerator.getJoin(nodeIP, nodePort));
+	}
+	
+	public void join(String ip, int port){
+		RoutingTableEntry entry = new RoutingTableEntry(ip, port);
+		routingTable.add(entry);
+		
+		nodeCommunicator.send(ip, port, queryGenerator.getJoinOK(0));
+	}
+	
+	public void leave(String ip, int port){
+		routingTable.remove(ip,port);
+		
+		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
 	}
 }

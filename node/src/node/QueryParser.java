@@ -17,19 +17,15 @@ public class QueryParser {
 				case 1:
 					String ip = tokens[3];
 					int port = Integer.parseInt(tokens[4]);
-					String username = tokens[5];
-					qe.regOKSuccess(ip, port, username);
+					qe.regOKSuccess(ip, port);
 					log.info("Node successfully registered");
 					break;
 				case 2:
 					String ip1 = tokens[3];
 					int port1 = Integer.parseInt(tokens[4]);
-					String username1 = tokens[5];
 					String ip2 = tokens[6];
 					int port2 = Integer.parseInt(tokens[7]);
-					String username2 = tokens[8];
-					qe.regOKSuccess(ip1, port1, username1, ip2, port2,
-							username2);
+					qe.regOKSuccess(ip1, port1, ip2, port2);
 					log.info("Node successfully registered");
 					break;
 				case 0:
@@ -57,6 +53,27 @@ public class QueryParser {
 
 				}
 			}
+
+			if (command.equals("JOIN")) {
+				String ip = tokens[2];
+				int port = Integer.parseInt(tokens[3]);
+				qe.join(ip, port);
+			}
+
+			if (command.equals("JOINOK")) {
+				//TODO:if JOIN failed do something!!!
+			}
+			
+			if (command.equals("LEAVE")) {
+				String ip = tokens[2];
+				int port = Integer.parseInt(tokens[3]);
+				qe.leave(ip, port);
+			}
+			
+			if (command.equals("LEAVEOK")) {
+				//TODO:if LEAVE failed do something!!!
+			}
+			
 		} catch (ArrayIndexOutOfBoundsException e) {
 
 		}

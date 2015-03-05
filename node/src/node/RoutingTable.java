@@ -54,20 +54,5 @@ public class RoutingTable {
 			routingTable.remove(entry);
 		}
 	}
-	
-	public synchronized void remove(String ip, int port, String username) {
-		Iterator<RoutingTableEntry> itr = routingTable.iterator();
-		RoutingTableEntry entry = null;
-		
-		while (itr.hasNext()) {
-			entry = itr.next();
-			if (entry.IP.equals(ip) && entry.port == port && entry.username.equals(username)) {
-				break;
-			}
-		}
-		if (entry != null) {
-			routingTable.remove(entry);
-		}
-	}
 
 }

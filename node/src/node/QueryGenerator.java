@@ -24,7 +24,7 @@ public class QueryGenerator {
 	public synchronized String getSearch(String IP, int port,String filename,int hops) {
 		return addLength("SER " + IP + " " + port + " " + filename + " " + hops);
 	}
-	public synchronized String getSearchOK(int numberoffiles,String IP, int port,List<String> filenames,int hops) {
+	public synchronized String getSearchOK(String IP, int port,List<String> filenames,int hops) {
 		StringBuffer fileNameString = new StringBuffer();
 		String prefix="";
 		for(String file:filenames){

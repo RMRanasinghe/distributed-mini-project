@@ -2,9 +2,6 @@ package node;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -22,16 +19,8 @@ public class BSCommunicator {
 	private int BSPort, nodePort;
 
 	private BSCommunicator() {
-		properties = new Properties();
-
-		try {
-			properties.load(new FileInputStream("resources" + File.separator
-					+ "constants.properties"));
-		} catch (FileNotFoundException e) {
-			log.severe("Boostrap server configuration file not found");
-		} catch (IOException e) {
-			log.severe("Configuration file did not get loaded");
-		}
+		PropertyLoader propertyLoader = new PropertyLoader();
+		properties = propertyLoader.getProperties();
 
 		BSAddress = properties.getProperty("bs.internet.address");
 		BSPort = Integer.parseInt(properties.getProperty("bs.internet.port"));
@@ -66,7 +55,6 @@ public class BSCommunicator {
 		Socket clientSocket = null;
 		String sentence = query + "\n";
 		String modifiedSentence;
-		boolean attemptFailed = false;
 
 		try {
 			clientSocket = new Socket(BSAddress, BSPort);
@@ -92,7 +80,6 @@ public class BSCommunicator {
 		}
 
 		BufferedReader inFromServer;
-		if (!attemptFailed) {
 			try {
 				inFromServer = new BufferedReader(new InputStreamReader(
 						clientSocket.getInputStream()));
@@ -103,6 +90,7 @@ public class BSCommunicator {
 				return modifiedSentence;
 			} catch (IOException e) {
 				log.severe("Query error");
+				System.exit(1);
 			} finally {
 				try {
 					clientSocket.close();
@@ -110,7 +98,6 @@ public class BSCommunicator {
 					log.warning("Closing the connection to boostrap server failed");
 				}
 			}
-		}
 		return null;
 	}
 

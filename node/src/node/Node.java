@@ -10,6 +10,9 @@ public class Node {
 	public static void main(String[] args) throws IOException {	
 		
 		log.info("Starting node");
+		PropertyLoader propertyLoader = new PropertyLoader();
+		propertyLoader.init();
+		
 		BSCommunicator bsCommunicator = BSCommunicator.INSTANCE;
 		String out = bsCommunicator.init();
 		

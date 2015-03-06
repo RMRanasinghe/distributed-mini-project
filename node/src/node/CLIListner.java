@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class CLIListner implements Runnable {
@@ -16,13 +17,16 @@ public class CLIListner implements Runnable {
 	public final static CLIListner INSTANCE = new CLIListner();
 	private Properties properties = null;
 	private String fileList;
-	private NodeCommunicator nodeCommunicator;
+	private QueryGenerator qg;
+	private QueryExecutor qe;
+	
 	
 	private CLIListner() {
 		PropertyLoader propertyLoader = new PropertyLoader();
 		properties = propertyLoader.getProperties();
 		fileList = properties.getProperty("node.filelist");
-		nodeCommunicator = NodeCommunicator.INSTANCE;
+		qg= new QueryGenerator();
+		qe = new QueryExecutor();
 		
 	}
 
@@ -39,7 +43,7 @@ public class CLIListner implements Runnable {
 				}else if(command.equalsIgnoreCase("Search")){
 					System.out.println("Enter file name to search:");
 					String searchName=br.readLine();
-					searchFile(searchName);
+					searchFile(searchName,properties.getProperty("node.internet.address"),Integer.parseInt(properties.getProperty("node.internet.port")),10);
 				}else{
 					System.out.println("Incorrect command. Please enter a valid command");	
 				}
@@ -64,8 +68,13 @@ public class CLIListner implements Runnable {
 			System.out.println(file);
 		}
 	}
-	private void searchFile(String fileName){
-		//TODO:send message to other connected nodes
+	private void searchFile(String fileName,String IP,int port,int hops){
+		Random rand = new Random();
+		String messageId = IP+rand.nextInt(100);
+		String searchQuery = qg.getSearch(IP, port, fileName, hops, messageId);
+		qe.search(searchQuery);
+		//TO DO: handle incoming search results message
+		
 	}
 
 }

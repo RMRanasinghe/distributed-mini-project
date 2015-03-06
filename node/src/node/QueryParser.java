@@ -73,6 +73,14 @@ public class QueryParser {
 			if (command.equals("LEAVEOK")) {
 				//TODO:if LEAVE failed do something!!!
 			}
+			if (command.equals("SER")) {
+				String ip = tokens[2];
+				int port = Integer.parseInt(tokens[3]);
+				String fileName = tokens[4];
+				int hops = Integer.parseInt(tokens[5]);
+				String messageId = tokens[6];
+				qe.search("");
+			}
 			
 		} catch (ArrayIndexOutOfBoundsException e) {
 

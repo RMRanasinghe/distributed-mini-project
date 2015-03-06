@@ -1,6 +1,7 @@
 package node;
 
 import java.util.Properties;
+import java.util.Set;
 
 
 public class QueryExecutor {
@@ -45,5 +46,11 @@ public class QueryExecutor {
 		routingTable.remove(ip,port);
 		
 		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
+	}
+	public void search(String message){
+		Set<RoutingTableEntry> connectedNodes=routingTable.get();
+		for(RoutingTableEntry connectedNode:connectedNodes){
+		nodeCommunicator.send(connectedNode.IP, connectedNode.port, message);
+		}
 	}
 }

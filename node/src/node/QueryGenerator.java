@@ -21,8 +21,8 @@ public class QueryGenerator {
 	public String getLeaveOK(int value) {
 		return addLength("LEAVEOK " + value);
 	}
-	public String getSearch(String IP, int port,String filename,int hops) {
-		return addLength("SER " + IP + " " + port + " " + filename + " " + hops);
+	public String getSearch(String IP, int port,String filename,int hops,String messageId) {
+		return addLength("SER " + IP + " " + port + " " + filename + " " + hops + " " + messageId);
 	}
 	public String getSearchOK(String IP, int port,List<String> filenames,int hops) {
 		StringBuffer fileNameString = new StringBuffer();

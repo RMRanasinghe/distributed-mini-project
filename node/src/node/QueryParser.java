@@ -79,7 +79,7 @@ public class QueryParser {
 				String fileName = tokens[4];
 				int hops = Integer.parseInt(tokens[5]);
 				String messageId = tokens[6];
-				qe.search("");
+				qe.search("",fileName);
 			}
 			
 		} catch (ArrayIndexOutOfBoundsException e) {

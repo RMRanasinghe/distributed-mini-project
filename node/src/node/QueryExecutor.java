@@ -47,7 +47,9 @@ public class QueryExecutor {
 		
 		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
 	}
-	public void search(String message){
+	public void search(String message,String fileName){
+		//TO DO: handle the filename result and forward or respond
+		
 		Set<RoutingTableEntry> connectedNodes=routingTable.get();
 		for(RoutingTableEntry connectedNode:connectedNodes){
 		nodeCommunicator.send(connectedNode.IP, connectedNode.port, message);

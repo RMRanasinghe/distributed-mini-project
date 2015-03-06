@@ -72,7 +72,7 @@ public class CLIListner implements Runnable {
 		Random rand = new Random();
 		String messageId = IP+rand.nextInt(100);
 		String searchQuery = qg.getSearch(IP, port, fileName, hops, messageId);
-		qe.search(searchQuery);
+		qe.search(searchQuery,fileName);
 		//TO DO: handle incoming search results message
 		
 	}

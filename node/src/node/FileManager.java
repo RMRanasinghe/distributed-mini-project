@@ -31,12 +31,14 @@ public class FileManager {
 		if (files.isEmpty()) {
 			return null;
 		} else {
-			LinkedList<String> result =new LinkedList<String>();
+			LinkedList<String> result =null;
 			for (String afile : files) {
 				int searchMeLength = afile.length();
 				int findMeLength = file.length();
 				for (int i = 0; i <= (searchMeLength - findMeLength); i++) {
 					if (afile.regionMatches(true, i, file, 0, findMeLength)) {
+						if(result ==null)
+							result = new LinkedList<String>();
 						result.add(afile);
 						break;
 					}

@@ -1,6 +1,8 @@
 package node;
 
+import java.util.LinkedList;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Set;
 
 
@@ -9,6 +11,8 @@ public class QueryExecutor {
 	RoutingTable routingTable = RoutingTable.INSTANCE;
 	NodeCommunicator nodeCommunicator = NodeCommunicator.INSTANCE;
 	QueryGenerator queryGenerator = new QueryGenerator();
+	
+	FileManager fileManager = new FileManager();
 	
 	PropertyLoader propertyLoader = new PropertyLoader();
 	Properties properties = propertyLoader.getProperties();	
@@ -47,12 +51,24 @@ public class QueryExecutor {
 		
 		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
 	}
-	public void search(String message,String fileName){
-		//TO DO: handle the filename result and forward or respond
+	public void search(String ip, int port,int hops,String fileName){
 		
-		Set<RoutingTableEntry> connectedNodes=routingTable.get();
-		for(RoutingTableEntry connectedNode:connectedNodes){
-		nodeCommunicator.send(connectedNode.IP, connectedNode.port, message);
+		LinkedList<String> fileNames = fileManager.find(fileName);
+		if (fileNames != null) {
+			String responseQuery = queryGenerator.getSearchOK(nodeIP, nodePort,
+					fileNames, hops - 1);
+			nodeCommunicator.send(ip, port, responseQuery);
+		} else {
+
+			Random rand = new Random();
+			String messageId = ip + rand.nextInt(100);
+			String searchQuery = queryGenerator.getSearch(ip, port, fileName,
+					hops, messageId);
+			Set<RoutingTableEntry> connectedNodes = routingTable.get();
+			for (RoutingTableEntry connectedNode : connectedNodes) {
+				nodeCommunicator.send(connectedNode.IP, connectedNode.port,
+						searchQuery);
+		}
 		}
 	}
 }

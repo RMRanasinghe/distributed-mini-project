@@ -1,7 +1,10 @@
 package node;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -99,6 +102,15 @@ public class QueryParser {
 				int port = Integer.parseInt(tokens[4]);
 				int hops = Integer.parseInt(tokens[5]);
 				String fileList = tokens[6];
+				System.out.println("---------File Found---------");
+				System.out.println("IP:"+ip);
+				System.out.println("Port:"+port);
+				List<String> fileNameList = new ArrayList<String>(Arrays.asList(fileList.split(",")));
+				for(String file:fileNameList){
+					System.out.println(file);
+				}
+				System.out.println("---------End File List---------");
+				System.out.println("node>>>");
 			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {

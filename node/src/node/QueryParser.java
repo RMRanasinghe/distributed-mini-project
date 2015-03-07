@@ -1,11 +1,29 @@
 package node;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class QueryParser {
+	private Set<String> prevMessageIDSet;
+	private int maxBuffer;
 	private static final Logger log = Logger.getLogger(QueryParser.class
 			.getName());
 
+	public QueryParser(int maxBuffer) {
+		prevMessageIDSet = new LinkedHashSet<String>();
+		this.maxBuffer = maxBuffer; //get from property file
+	}
+	public QueryParser() {
+		prevMessageIDSet = new LinkedHashSet<String>();
+		this.maxBuffer = 100; //default buffer size
+	}
+	private void forgetOldestMessageId(Set<String> set){
+		Iterator<String> iter = set.iterator();
+	    iter.next();
+	    iter.remove();
+	}
 	public void parse(String query) {
 		String[] tokens = query.split("\\s+");
 		String command = tokens[1];
@@ -61,17 +79,17 @@ public class QueryParser {
 			}
 
 			if (command.equals("JOINOK")) {
-				//TODO:if JOIN failed do something!!!
+				// TODO:if JOIN failed do something!!!
 			}
-			
+
 			if (command.equals("LEAVE")) {
 				String ip = tokens[2];
 				int port = Integer.parseInt(tokens[3]);
 				qe.leave(ip, port);
 			}
-			
+
 			if (command.equals("LEAVEOK")) {
-				//TODO:if LEAVE failed do something!!!
+				// TODO:if LEAVE failed do something!!!
 			}
 			if (command.equals("SER")) {
 				String ip = tokens[2];
@@ -79,9 +97,17 @@ public class QueryParser {
 				String fileName = tokens[4];
 				int hops = Integer.parseInt(tokens[5]);
 				String messageId = tokens[6];
-				qe.search(ip,port,hops,fileName);
+				//unique search test
+				if (!prevMessageIDSet.add(messageId)) {
+					qe.search(ip, port, hops, fileName);
+					//maintain max buffer size
+					if(prevMessageIDSet.size()>maxBuffer)
+					forgetOldestMessageId(prevMessageIDSet);
+				} else {
+					// drop search packet without doing anything
+				}
 			}
-			
+
 		} catch (ArrayIndexOutOfBoundsException e) {
 
 		}

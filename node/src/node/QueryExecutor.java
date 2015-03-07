@@ -59,7 +59,6 @@ public class QueryExecutor {
 					fileNames, hops - 1);
 			nodeCommunicator.send(ip, port, responseQuery);
 		} else {
-
 			Random rand = new Random();
 			String messageId = ip + rand.nextInt(100);
 			String searchQuery = queryGenerator.getSearch(ip, port, fileName,

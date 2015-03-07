@@ -81,6 +81,13 @@ public class QueryParser {
 				String messageId = tokens[6];
 				qe.search(ip,port,hops,fileName);
 			}
+			if (command.equals("SEROK")) {
+				int noOfFiles = Integer.parseInt(tokens[2]);
+				String ip = tokens[3];
+				int port = Integer.parseInt(tokens[4]);
+				int hops = Integer.parseInt(tokens[5]);
+				String fileList = tokens[6];
+			}
 			
 		} catch (ArrayIndexOutOfBoundsException e) {
 

@@ -107,6 +107,13 @@ public class QueryParser {
 					// drop search packet without doing anything
 				}
 			}
+			if (command.equals("SEROK")) {
+				int noOfFiles = Integer.parseInt(tokens[2]);
+				String ip = tokens[3];
+				int port = Integer.parseInt(tokens[4]);
+				int hops = Integer.parseInt(tokens[5]);
+				String fileList = tokens[6];
+			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 

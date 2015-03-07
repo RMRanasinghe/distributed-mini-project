@@ -24,6 +24,7 @@ public class NodeListner implements Runnable {
 
 	public void run() {
 		DatagramSocket serverSocket;
+		QueryParser queryParser = new QueryParser();
 		try {
 			serverSocket = new DatagramSocket(nodePort);
 			byte[] receiveData = new byte[1024];
@@ -34,7 +35,7 @@ public class NodeListner implements Runnable {
 				String query = new String(receivePacket.getData());
 				log.info("Query recieved: "+query);
 				System.out.println("node>>>");
-				//TODO:send sentence to query parser
+				queryParser.parse(query);
 			}
 		} catch (SocketException e) {
 			log.info("message recieving failed");

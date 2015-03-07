@@ -6,23 +6,15 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class QueryParser {
-	private Set<String> prevMessageIDSet;
-	private int maxBuffer;
+	private BoundedMessageIDBuffer prevMessageIDSet;
 	private static final Logger log = Logger.getLogger(QueryParser.class
 			.getName());
 
 	public QueryParser(int maxBuffer) {
-		prevMessageIDSet = new LinkedHashSet<String>();
-		this.maxBuffer = maxBuffer; //get from property file
+		prevMessageIDSet = new BoundedMessageIDBuffer(maxBuffer);//get from property file
 	}
 	public QueryParser() {
-		prevMessageIDSet = new LinkedHashSet<String>();
-		this.maxBuffer = 100; //default buffer size
-	}
-	private void forgetOldestMessageId(Set<String> set){
-		Iterator<String> iter = set.iterator();
-	    iter.next();
-	    iter.remove();
+		prevMessageIDSet = new BoundedMessageIDBuffer();
 	}
 	public void parse(String query) {
 		String[] tokens = query.split("\\s+");
@@ -100,9 +92,6 @@ public class QueryParser {
 				//unique search test
 				if (prevMessageIDSet.add(messageId)) {
 					qe.search(ip, port, hops, fileName);
-					//maintain max buffer size
-					if(prevMessageIDSet.size()>maxBuffer)
-					forgetOldestMessageId(prevMessageIDSet);
 				} else {
 					// drop search packet without doing anything
 				}

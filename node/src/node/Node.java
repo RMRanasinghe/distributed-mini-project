@@ -12,22 +12,20 @@ public class Node {
 		log.info("Starting node");
 		PropertyLoader propertyLoader = new PropertyLoader();
 		propertyLoader.init();
-		
 
-		/*Start CLI Listner thread*/
-		CLIListner cliListner = CLIListner.INSTANCE;
-		cliListner.start();
-		
+		/*Start node listner thread*/
+		NodeListner nodeListner = NodeListner.INSTANCE;
+		nodeListner.start();
 		
 		BSCommunicator bsCommunicator = BSCommunicator.INSTANCE;
 		String out = bsCommunicator.init();
 		
 		QueryParser qp = new QueryParser();
 		qp.parse(out);
-
-		/*Start node listner thread*/
-		NodeListner nodeListner = NodeListner.INSTANCE;
-		nodeListner.start();
+		
+		/*Start CLI Listner thread*/
+		CLIListner cliListner = CLIListner.INSTANCE;
+		cliListner.start();
 		
 	}
 	

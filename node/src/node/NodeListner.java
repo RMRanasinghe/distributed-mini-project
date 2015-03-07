@@ -25,28 +25,26 @@ public class NodeListner implements Runnable {
 	public void run() {
 		DatagramSocket serverSocket;
 		QueryParser queryParser = new QueryParser();
-		while (true) {
-			try {
-				serverSocket = new DatagramSocket(nodePort);
-				byte[] receiveData = new byte[1024];
-				while (true) {
-					DatagramPacket receivePacket = new DatagramPacket(
-							receiveData, receiveData.length);
-					serverSocket.receive(receivePacket);
-					String query = new String(receivePacket.getData());
-					log.info("Query recieved: " + query);
-					System.out.println("node>>>");
-					queryParser.parse(query);
-				}
-			} catch (SocketException e) {
-				log.info("message recieving failed");
+		try {
+			serverSocket = new DatagramSocket(nodePort);
+			byte[] receiveData = new byte[1024];
+			while (true) {
+				DatagramPacket receivePacket = new DatagramPacket(receiveData,
+						receiveData.length);
+				serverSocket.receive(receivePacket);
+				String query = new String(receivePacket.getData());
+				log.info("Query recieved: "+query);
 				System.out.println("node>>>");
-			} catch (IOException e) {
-				log.info("message recieving failed");
-				System.out.println("node>>>");
+				queryParser.parse(query);
 			}
+		} catch (SocketException e) {
+			log.info("message recieving failed");
+			System.out.println("node>>>");
+		} catch (IOException e) {
+			log.info("message recieving failed");
+			System.out.println("node>>>");
 		}
-
+		
 	}
 
 	public void start() {

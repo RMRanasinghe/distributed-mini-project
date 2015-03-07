@@ -98,7 +98,7 @@ public class QueryParser {
 				int hops = Integer.parseInt(tokens[5]);
 				String messageId = tokens[6];
 				//unique search test
-				if (!prevMessageIDSet.add(messageId)) {
+				if (prevMessageIDSet.add(messageId)) {
 					qe.search(ip, port, hops, fileName);
 					//maintain max buffer size
 					if(prevMessageIDSet.size()>maxBuffer)

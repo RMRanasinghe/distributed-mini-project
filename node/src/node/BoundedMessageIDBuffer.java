@@ -27,4 +27,9 @@ public class BoundedMessageIDBuffer {
 	    iter.next();
 	    iter.remove();
 	}
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return MessageIDSet.toString();
+	}
 }

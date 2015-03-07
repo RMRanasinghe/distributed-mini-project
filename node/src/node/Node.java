@@ -13,6 +13,12 @@ public class Node {
 		PropertyLoader propertyLoader = new PropertyLoader();
 		propertyLoader.init();
 		
+
+		/*Start CLI Listner thread*/
+		CLIListner cliListner = CLIListner.INSTANCE;
+		cliListner.start();
+		
+		
 		BSCommunicator bsCommunicator = BSCommunicator.INSTANCE;
 		String out = bsCommunicator.init();
 		
@@ -22,10 +28,6 @@ public class Node {
 		/*Start node listner thread*/
 		NodeListner nodeListner = NodeListner.INSTANCE;
 		nodeListner.start();
-		
-		/*Start CLI Listner thread*/
-		CLIListner cliListner = CLIListner.INSTANCE;
-		cliListner.start();
 		
 	}
 	

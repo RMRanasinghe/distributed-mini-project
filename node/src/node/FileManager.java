@@ -2,6 +2,8 @@ package node;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileManager {
 	public final static FileManager INSTANCE = new FileManager();
@@ -32,17 +34,44 @@ public class FileManager {
 			return null;
 		} else {
 			LinkedList<String> result =null;
+			LinkedList<String> searchFile =new LinkedList();
+			Pattern pattern = Pattern.compile("\\w+");
+			Matcher matcher = pattern.matcher(file);
+			while (matcher.find()) {
+			    searchFile.add(matcher.group());
+			}
 			for (String afile : files) {
-				int searchMeLength = afile.length();
-				int findMeLength = file.length();
-				for (int i = 0; i <= (searchMeLength - findMeLength); i++) {
-					if (afile.regionMatches(true, i, file, 0, findMeLength)) {
-						if(result ==null)
-							result = new LinkedList<String>();
-						result.add(afile);
-						break;
+				int count =0;
+				LinkedList<String> afileList =new LinkedList();
+				matcher = pattern.matcher(afile);
+				while (matcher.find()) {
+				    afileList.add(matcher.group());
+				}
+				for(String s: searchFile){
+					for(String as: afileList){
+						if(s.equalsIgnoreCase(as))
+							count++;
 					}
 				}
+				if (count==searchFile.size()){
+					if(result ==null)
+						result = new LinkedList<String>();
+					result.add(afile);
+					
+				}
+				// region match search method 
+//				int searchMeLength = afile.length();
+//				int findMeLength = file.length();
+//				for (int i = 0; i <= (searchMeLength - findMeLength); i++) {
+//					if (afile.regionMatches(true, i, file, 0, findMeLength)) {
+//						if(result ==null)
+//							result = new LinkedList<String>();
+//						result.add(afile);
+//						break;
+//					}
+//				}
+				
+				
 			}
 			return result;
 		}

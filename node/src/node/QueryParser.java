@@ -53,7 +53,16 @@ public class QueryParser {
 					System.exit(1);
 					break;
 				default:
-					log.severe("undefined error code: " + command);
+					//TODO:Remove this after fixing boostrap server
+					/*
+					 * Undefined error code
+					 */
+					String ipn = tokens[3];
+					int portn = Integer.parseInt(tokens[4]);
+					String ipm = tokens[6];
+					int portm = Integer.parseInt(tokens[7]);
+					qe.regOKSuccess(ipn, portn, ipm, portm);
+					log.info("Node successfully registered");
 					break;
 
 				}
@@ -95,11 +104,11 @@ public class QueryParser {
 				int port = Integer.parseInt(tokens[4]);
 				int hops = Integer.parseInt(tokens[5]);
 				List<String> files = new LinkedList<String>();
-				
+
 				for (int i = 0; i < noOfFiles; ++i) {
 					files.add(tokens[6 + i]);
 				}
-				
+
 				qe.fileFound(ip, port, files, hops);
 			}
 

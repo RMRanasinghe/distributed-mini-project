@@ -27,7 +27,7 @@ public class QueryExecutor {
 		nodeIP = properties.getProperty("node.internet.address");
 		nodePort = Integer.parseInt(properties
 				.getProperty("node.internet.port"));
-		sentIds = new BoundedMessageIDBuffer();
+		sentIds = BoundedMessageIDBuffer.INSTANCE;
 	}
 
 	public void regOKSuccess(String ip, int port) {

@@ -10,11 +10,8 @@ public class QueryParser {
 	private static final Logger log = Logger.getLogger(QueryParser.class
 			.getName());
 
-	public QueryParser(int maxBuffer) {
-		prevMessageIDSet = new BoundedMessageIDBuffer(maxBuffer);//get from property file
-	}
 	public QueryParser() {
-		prevMessageIDSet = new BoundedMessageIDBuffer();
+		prevMessageIDSet = BoundedMessageIDBuffer.INSTANCE;
 	}
 	public void parse(String query) {
 		String[] tokens = query.split("\\s+");

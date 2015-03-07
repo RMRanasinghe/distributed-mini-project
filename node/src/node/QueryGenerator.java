@@ -40,11 +40,11 @@ public class QueryGenerator {
 	private String addLength(String str) {
 		int length = str.length() + 6;
 		if (length < 10) {
-			return "000" + length + " " + str;
+			return "000" + length + " " + str+"\n";
 		} else if (length < 100) {
-			return "00" + length + " " + str;
+			return "00" + length + " " + str+"\n";
 		} else {
-			return "0" + length + " " + str;
+			return "0" + length + " " + str+"\n";
 		}
 	}
 }

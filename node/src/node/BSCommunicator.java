@@ -53,7 +53,7 @@ public class BSCommunicator {
 
 	private String sendandRecieve(String query) {
 		Socket clientSocket = null;
-		String sentence = query + "\n";
+		String sentence = query;
 		String modifiedSentence;
 
 		try {

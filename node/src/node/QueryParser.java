@@ -61,7 +61,8 @@ public class QueryParser {
 
 			if (command.equals("JOIN")) {
 				String ip = tokens[2];
-				int port = Integer.parseInt(tokens[3]);
+				String p = tokens[3];
+				int port = Integer.parseInt(p);
 				qe.join(ip, port);
 			}
 

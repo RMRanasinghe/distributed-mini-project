@@ -100,4 +100,16 @@ public class QueryExecutor {
 	public List<String> getFileList() {
 		return fileManager.getFiles();
 	}
+
+	public void fileFound(String ip, int port, List<String> files, int hops) {
+		System.out.println("File(s) found:");
+		System.out.print("File names: ");
+		for (String file : files) {
+			System.out.print(file + " ");
+		}
+		System.out.println();
+		System.out.println("At ip: " + ip + "port: " + port + "within " + hops
+				+ "number of hops");
+		System.out.print("node>>>");
+	}
 }

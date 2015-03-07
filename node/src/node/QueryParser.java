@@ -1,5 +1,7 @@
 package node;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class QueryParser {
@@ -91,7 +93,13 @@ public class QueryParser {
 				String ip = tokens[3];
 				int port = Integer.parseInt(tokens[4]);
 				int hops = Integer.parseInt(tokens[5]);
-				String fileList = tokens[6];
+				List<String> files = new LinkedList<String>();
+				
+				for (int i = 0; i < noOfFiles; ++i) {
+					files.add(tokens[6 + i]);
+				}
+				
+				qe.fileFound(ip, port, files, hops);
 			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -99,4 +107,3 @@ public class QueryParser {
 		}
 	}
 }
-

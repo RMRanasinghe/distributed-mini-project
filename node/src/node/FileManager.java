@@ -29,7 +29,7 @@ public class FileManager {
 	}
 
 	public synchronized LinkedList<String> find(String file) {
-		
+		//TODO: modify this to work with underscore 
 		if (files.isEmpty()) {
 			return null;
 		} else {
@@ -59,19 +59,6 @@ public class FileManager {
 					result.add(afile);
 					
 				}
-				// region match search method 
-//				int searchMeLength = afile.length();
-//				int findMeLength = file.length();
-//				for (int i = 0; i <= (searchMeLength - findMeLength); i++) {
-//					if (afile.regionMatches(true, i, file, 0, findMeLength)) {
-//						if(result ==null)
-//							result = new LinkedList<String>();
-//						result.add(afile);
-//						break;
-//					}
-//				}
-				
-				
 			}
 			return result;
 		}

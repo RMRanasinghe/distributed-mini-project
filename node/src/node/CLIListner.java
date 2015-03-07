@@ -3,10 +3,7 @@ package node;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 public class CLIListner implements Runnable {
@@ -14,14 +11,9 @@ public class CLIListner implements Runnable {
 	private static final Logger log = Logger.getLogger(CLIListner.class
 			.getName());
 	public final static CLIListner INSTANCE = new CLIListner();
-	private Properties properties = null;
-	private QueryGenerator qg;
 	private QueryExecutor qe;
 
 	private CLIListner() {
-		PropertyLoader propertyLoader = new PropertyLoader();
-		properties = propertyLoader.getProperties();
-		qg = new QueryGenerator();
 		qe = new QueryExecutor();
 
 	}
@@ -38,7 +30,7 @@ public class CLIListner implements Runnable {
 					printFileList();
 				} else if (command.equalsIgnoreCase("Search")) {
 					System.out.println("Enter file name to search:");
-					String searchName = br.readLine();
+					String searchName = br.readLine().replace(" ", "_");
 					qe.fileSearch(searchName);
 				} else {
 					System.out

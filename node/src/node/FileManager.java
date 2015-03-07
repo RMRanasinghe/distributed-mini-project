@@ -3,6 +3,7 @@ package node;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +44,8 @@ public class FileManager {
 		if (files.isEmpty()) {
 			return null;
 		} else {
-			Pattern p = Pattern.compile("(.*_)?"+file.toLowerCase()+"(_(.*))?");
+			String search = file.toLowerCase().replace("_", "_(.*)?");
+			Pattern p = Pattern.compile("(.*_)?"+search+"(_(.*))?");
 			for(String afile:files){
 				Matcher m = p.matcher(afile.toLowerCase());
 				if(m.matches()){

@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public class BoundedMessageIDBuffer {
 	private int maxSize;
-	private Queue<String> MessageIDSet;
+	private Queue<Integer> MessageIDSet;
 	private PropertyLoader propertyLoader = new PropertyLoader();
 	private Properties properties = propertyLoader.getProperties();
 	public final static BoundedMessageIDBuffer INSTANCE = new BoundedMessageIDBuffer();
@@ -14,24 +14,27 @@ public class BoundedMessageIDBuffer {
 	private BoundedMessageIDBuffer() {
 		maxSize = Integer.parseInt(properties
 				.getProperty("message.id.buffer.size"));
-		MessageIDSet = new LinkedList<String>();
+		MessageIDSet = new LinkedList<Integer>();
 	}
 
-	public boolean add(String id) {
-		boolean ret = MessageIDSet.add(id);
-		if (ret && MessageIDSet.size() >= maxSize) {
-			forgetOldestMessageId();
+	public void add(int id) {
+		if (!contains(id)) {
+			MessageIDSet.add(id);
+			if (MessageIDSet.size() >= maxSize) {
+				forgetOldestMessageId();
+			}
 		}
-		return ret;
+	}
+
+	public boolean contains(int id) {
+		if (MessageIDSet.contains(id)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private void forgetOldestMessageId() {
 		MessageIDSet.remove();
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return MessageIDSet.toString();
 	}
 }

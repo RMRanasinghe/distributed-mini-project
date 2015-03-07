@@ -1,21 +1,22 @@
 package node;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
 public class QueryExecutor {
 
-	RoutingTable routingTable;
-	NodeCommunicator nodeCommunicator;
-	QueryGenerator queryGenerator;
-	FileManager fileManager;
-	PropertyLoader propertyLoader;
-	Properties properties;
-	String nodeIP;
-	int nodePort;
-	BoundedMessageIDBuffer sentIds;
+	private RoutingTable routingTable;
+	private NodeCommunicator nodeCommunicator;
+	private QueryGenerator queryGenerator;
+	private FileManager fileManager;
+	private PropertyLoader propertyLoader;
+	private Properties properties;
+	private String nodeIP;
+	private int nodePort;
+	private BoundedMessageIDBuffer sentIds;
 
 	public QueryExecutor() {
 		routingTable = RoutingTable.INSTANCE;
@@ -64,28 +65,39 @@ public class QueryExecutor {
 		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
 	}
 
-	public void search(String ip, int port, int hops, String fileName) {
+	public void fileSearch(String fileName) {
+		int maxHops = Integer.parseInt(properties.getProperty("max.ttl"));
+		Random rand = new Random();
+		int id = rand.nextInt();// The probability of getting same number again
+								// is low
+		fileSearch(fileName, nodeIP, nodePort, id, maxHops);
+	}
 
+	public void fileSearch(String fileName, String ip, int port, int id,
+			int hops) {
+		if (sentIds.contains(id)) {
+			return;
+		}
+		sentIds.add(id);
 		LinkedList<String> fileNames = fileManager.find(fileName);
 		if (fileNames != null) {
 			String responseQuery = queryGenerator.getSearchOK(nodeIP, nodePort,
 					fileNames, hops - 1);
 			nodeCommunicator.send(ip, port, responseQuery);
 		} else {
-			Random rand = new Random();
-			
-			String messageId;
-			do{
-				messageId = ip + rand.nextInt(100); //loop to get unique ID
-			}while(!sentIds.add(messageId));
-			
-			String searchQuery = queryGenerator.getSearch(ip, port, fileName,
-					hops, messageId);
-			Set<RoutingTableEntry> connectedNodes = routingTable.get();
-			for (RoutingTableEntry connectedNode : connectedNodes) {
-				nodeCommunicator.send(connectedNode.IP, connectedNode.port,
-						searchQuery);
+			if (hops != 0) {
+				String searchQuery = queryGenerator.getSearch(ip, port,
+						fileName, hops - 1, id);
+				Set<RoutingTableEntry> connectedNodes = routingTable.get();
+				for (RoutingTableEntry connectedNode : connectedNodes) {
+					nodeCommunicator.send(connectedNode.IP, connectedNode.port,
+							searchQuery);
+				}
 			}
 		}
+	}
+
+	public List<String> getFileList() {
+		return fileManager.getFiles();
 	}
 }

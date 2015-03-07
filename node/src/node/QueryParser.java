@@ -1,21 +1,14 @@
 package node;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class QueryParser {
-	private BoundedMessageIDBuffer prevMessageIDSet;
 	private static final Logger log = Logger.getLogger(QueryParser.class
 			.getName());
 
 	public QueryParser() {
-		prevMessageIDSet = BoundedMessageIDBuffer.INSTANCE;
 	}
+
 	public void parse(String query) {
 		String[] tokens = query.split("\\s+");
 		String command = tokens[1];
@@ -88,13 +81,10 @@ public class QueryParser {
 				int port = Integer.parseInt(tokens[3]);
 				String fileName = tokens[4];
 				int hops = Integer.parseInt(tokens[5]);
-				String messageId = tokens[6];
-				//unique search test
-				if (prevMessageIDSet.add(messageId)) {
-					qe.search(ip, port, hops, fileName);
-				} else {
-					// drop search packet without doing anything
-				}
+				int messageId = Integer.parseInt(tokens[6]);
+
+				qe.fileSearch(fileName, ip, port, messageId, hops);
+
 			}
 			if (command.equals("SEROK")) {
 				int noOfFiles = Integer.parseInt(tokens[2]);
@@ -102,15 +92,6 @@ public class QueryParser {
 				int port = Integer.parseInt(tokens[4]);
 				int hops = Integer.parseInt(tokens[5]);
 				String fileList = tokens[6];
-				System.out.println("---------File Found---------");
-				System.out.println("IP:"+ip);
-				System.out.println("Port:"+port);
-				List<String> fileNameList = new ArrayList<String>(Arrays.asList(fileList.split(",")));
-				for(String file:fileNameList){
-					System.out.println(file);
-				}
-				System.out.println("---------End File List---------");
-				System.out.println("node>>>");
 			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -118,3 +99,4 @@ public class QueryParser {
 		}
 	}
 }
+

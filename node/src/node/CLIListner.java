@@ -15,18 +15,15 @@ public class CLIListner implements Runnable {
 			.getName());
 	public final static CLIListner INSTANCE = new CLIListner();
 	private Properties properties = null;
-	private String fileList;
 	private QueryGenerator qg;
 	private QueryExecutor qe;
-	
-	
+
 	private CLIListner() {
 		PropertyLoader propertyLoader = new PropertyLoader();
 		properties = propertyLoader.getProperties();
-		fileList = properties.getProperty("node.filelist");
-		qg= new QueryGenerator();
+		qg = new QueryGenerator();
 		qe = new QueryExecutor();
-		
+
 	}
 
 	public void run() {
@@ -37,14 +34,15 @@ public class CLIListner implements Runnable {
 			System.out.print("node>>> ");
 			try {
 				command = br.readLine();
-				if(command.equalsIgnoreCase("List")){
-					getFileList();
-				}else if(command.equalsIgnoreCase("Search")){
+				if (command.equalsIgnoreCase("List")) {
+					printFileList();
+				} else if (command.equalsIgnoreCase("Search")) {
 					System.out.println("Enter file name to search:");
-					String searchName=br.readLine();
-					searchFile(searchName,properties.getProperty("node.internet.address"),Integer.parseInt(properties.getProperty("node.internet.port")),10);
-				}else{
-					System.out.println("Incorrect command. Please enter a valid command");	
+					String searchName = br.readLine();
+					qe.fileSearch(searchName);
+				} else {
+					System.out
+							.println("Incorrect command. Please enter a valid command");
 				}
 			} catch (IOException ioe) {
 				System.out.println("Error getting input command. Retry");
@@ -60,17 +58,14 @@ public class CLIListner implements Runnable {
 			thread.start();
 		}
 	}
-	private void getFileList(){
+
+	private void printFileList(){
 		System.out.println("-----------File List-------------");
-		List<String> list = new ArrayList<String>(Arrays.asList(fileList.split(",")));
+		List<String> list = qe.getFileList();
 		for(String file:list){
 			System.out.println(file);
 		}
 	}
-	private void searchFile(String fileName,String IP,int port,int hops){
-		qe.search(IP,port,hops,fileName);
-		//TO DO: handle incoming search results message
-		
-	}
+
 
 }

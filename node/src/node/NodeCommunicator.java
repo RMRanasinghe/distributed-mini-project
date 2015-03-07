@@ -31,7 +31,6 @@ public class NodeCommunicator {
 			} catch (SocketException e) {
 				log.warning("message '" + message + "' did not get delivered!");
 			}
-			// TODO:exection should be answered by the caller
 			catch (IOException e) {
 				log.warning("message '" + message + "' did not get delivered!");
 			}

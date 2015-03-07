@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class CLIListner implements Runnable {
@@ -32,6 +33,8 @@ public class CLIListner implements Runnable {
 					System.out.println("Enter file name to search:");
 					String searchName = br.readLine().replace(" ", "_");
 					qe.fileSearch(searchName);
+				} else if(command.equalsIgnoreCase("Neighbours")){
+					printNeighbourList();
 				} else {
 					System.out
 							.println("Incorrect command. Please enter a valid command");
@@ -56,6 +59,13 @@ public class CLIListner implements Runnable {
 		List<String> list = qe.getFileList();
 		for(String file:list){
 			System.out.println(file);
+		}
+	}
+	private void printNeighbourList(){
+		System.out.println("-----------Routing Table-------------");
+		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
+		for(RoutingTableEntry rt : table){
+			System.out.println("IP : "+rt.IP+" Port : "+rt.port );
 		}
 	}
 

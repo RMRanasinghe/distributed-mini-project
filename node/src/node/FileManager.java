@@ -44,7 +44,7 @@ public class FileManager {
 		if (files.isEmpty()) {
 			return null;
 		} else {
-			String searchString = file.toLowerCase().replace("_", "_(.*)?");
+			String searchString = file.toLowerCase().replace("_", "_(.*_)?");
 			Pattern p = Pattern.compile("(.*_)?"+searchString+"(_(.*))?");
 			for(String afile:files){
 				Matcher m = p.matcher(afile.toLowerCase());

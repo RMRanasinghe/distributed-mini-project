@@ -80,7 +80,7 @@ public class QueryExecutor {
 		}
 		sentIds.add(id);
 		LinkedList<String> fileNames = fileManager.find(fileName);
-		if (fileNames != null) {
+		if (!fileNames.isEmpty()) {
 			String responseQuery = queryGenerator.getSearchOK(nodeIP, nodePort,
 					fileNames, hops - 1);
 			nodeCommunicator.send(ip, port, responseQuery);
@@ -108,8 +108,8 @@ public class QueryExecutor {
 			System.out.print(file + " ");
 		}
 		System.out.println();
-		System.out.println("At ip: " + ip + "port: " + port + "within " + hops
-				+ "number of hops");
+		System.out.println("At ip: " + ip + "port: " + port + " within " + hops
+				+ " number of hops");
 		System.out.print("node>>>");
 	}
 }

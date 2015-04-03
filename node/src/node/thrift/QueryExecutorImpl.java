@@ -1,8 +1,12 @@
 package node.thrift;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
+import node.BoundedMessageIDBuffer;
 import node.FileManager;
 import node.PropertyLoader;
 import node.RoutingTable;
@@ -21,6 +25,7 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 	private PropertyLoader propertyLoader;
 	private Properties properties;
 	private FileManager fileManager;
+	private BoundedMessageIDBuffer sentIds;
 	
 	public QueryExecutorImpl(){
 		routingTable = RoutingTable.INSTANCE;
@@ -30,6 +35,7 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 		nodeIP = properties.getProperty("node.internet.address");
 		nodePort = Integer.parseInt(properties
 				.getProperty("node.internet.port"));
+		sentIds = BoundedMessageIDBuffer.INSTANCE;
 	}
 	@Override
 	public void regOKSuccess1(String ip, int port) throws TException {
@@ -85,8 +91,41 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 	@Override
 	public void fileSearch(String fileName, String ip, int port, int id,int hops)
 			throws TException {
-		// TODO Auto-generated method stub
+		if (sentIds.contains(id)) {
+			return;
+		}sentIds.add(id);
+		LinkedList<String> fileNames = fileManager.find(fileName);
+		if (!fileNames.isEmpty()) {
+			fileFound(ip, port, fileNames, hops-1);
+		} else {
+			if (hops != 0) {
+				//String searchQuery = queryGenerator.getSearch(ip, port,
+						//fileName, hops - 1, id);
+				Set<RoutingTableEntry> connectedNodes = routingTable.get();
+				TTransport transport;
+				for (RoutingTableEntry connectedNode : connectedNodes) {
+					//nodeCommunicator.send(connectedNode.IP, connectedNode.port,
+							//searchQuery);
+					transport = new TSocket(ip, port);
+			        transport.open();
+			        TProtocol protocol = new TBinaryProtocol(transport);
+			        QueryExecutor.Client client = new QueryExecutor.Client(protocol);
+			        client.fileSearch(fileName,connectedNode.IP, connectedNode.port,id,hops-1);
+				}
+			}
+		}
 		
+	}
+	public void fileFound(String ip, int port, List<String> files, int hops) {
+		System.out.println("File(s) found:");
+		System.out.print("File names: ");
+		for (String file : files) {
+			System.out.print(file + " ");
+		}
+		System.out.println();
+		System.out.println("At ip: " + ip + "port: " + port + " within " + hops
+				+ " number of hops");
+		System.out.print("node>>>");
 	}
 
 }

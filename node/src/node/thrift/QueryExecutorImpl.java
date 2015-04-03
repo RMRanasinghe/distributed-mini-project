@@ -1,7 +1,9 @@
 package node.thrift;
 
 import java.util.Properties;
+import java.util.Random;
 
+import node.FileManager;
 import node.PropertyLoader;
 import node.RoutingTable;
 import node.RoutingTableEntry;
@@ -18,10 +20,12 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 	private int nodePort;
 	private PropertyLoader propertyLoader;
 	private Properties properties;
+	private FileManager fileManager;
 	
 	public QueryExecutorImpl(){
 		routingTable = RoutingTable.INSTANCE;
 		propertyLoader = new PropertyLoader();
+		fileManager = new FileManager();
 		properties = propertyLoader.getProperties();
 		nodeIP = properties.getProperty("node.internet.address");
 		nodePort = Integer.parseInt(properties
@@ -31,12 +35,13 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 	public void regOKSuccess1(String ip, int port) throws TException {
 		RoutingTableEntry entry = new RoutingTableEntry(ip, port);
 		routingTable.add(entry);
-		/*TTransport transport;
+		
+		TTransport transport;
         transport = new TSocket(ip, port);
         transport.open();
         TProtocol protocol = new TBinaryProtocol(transport);
         QueryExecutor.Client client = new QueryExecutor.Client(protocol);
-        client.regOKSuccess1(nodeIP, nodePort);;*/
+        client.join(nodeIP, nodePort);
 		
 	}
 
@@ -48,7 +53,7 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 		routingTable.add(entry1);
 		routingTable.add(entry2);
 		
-		/*TTransport transport1,transport2;
+		TTransport transport1,transport2;
         transport1 = new TSocket(ip1, port1);
         transport2 = new TSocket(ip2, port2);
         transport1.open();
@@ -57,8 +62,8 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
         TProtocol protocol2 = new TBinaryProtocol(transport2);
         QueryExecutor.Client client1 = new QueryExecutor.Client(protocol1);
         QueryExecutor.Client client2 = new QueryExecutor.Client(protocol2);
-        client1.regOKSuccess1(nodeIP, nodePort);;
-        client2.regOKSuccess1(nodeIP, nodePort);;*/
+        client1.join(nodeIP, nodePort);;
+        client2.join(nodeIP, nodePort);
 		
 	}
 
@@ -67,18 +72,12 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 		RoutingTableEntry entry = new RoutingTableEntry(ip, port);
 		routingTable.add(entry);
 		
-		TTransport transport;
-        transport = new TSocket(ip, port);
-        transport.open();
-        TProtocol protocol = new TBinaryProtocol(transport);
-        QueryExecutor.Client client = new QueryExecutor.Client(protocol);
-        client.regOKSuccess1(nodeIP, nodePort);
 		
 	}
 
 	@Override
 	public void leave(String ip, int port) throws TException {
-		// TODO Auto-generated method stub
+		routingTable.remove(ip, port);
 		
 	}
 

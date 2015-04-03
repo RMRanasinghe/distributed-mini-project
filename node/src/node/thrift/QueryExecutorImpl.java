@@ -81,14 +81,9 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 		
 	}
 
-	@Override
-	public void fileSearch1(String fileName) throws TException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
-	public void fileSearch2(String fileName, String ip, int port, int id)
+	public void fileSearch(String fileName, String ip, int port, int id,int hops)
 			throws TException {
 		// TODO Auto-generated method stub
 		

@@ -4,7 +4,6 @@ typedef i32 int
 
 service QueryGenerator
 {
-        int multiply(1:int n1, 2:int n2),
 		void regOKSuccess1 (1:string ip, 2: int port),
 		void regOKSuccess2 (1:string ip1, 2: int port1, 3:string ip2, 4:int port2),
 		void join(1:string ip, 2:int port),

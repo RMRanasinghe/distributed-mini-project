@@ -7,7 +7,7 @@ import java.net.SocketException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import node.thrift.QueryExecutorImpl;
+import node.thrift.QueryServiceImpl;
 
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TServer.AbstractServerArgs;

@@ -14,7 +14,7 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TSocket;
 
-public class QueryExecutorImpl implements QueryExecutor.Iface {
+public class QueryServiceImpl implements QueryService.Iface {
 	private RoutingTable routingTable;
 	private String nodeIP;
 	private int nodePort;
@@ -22,7 +22,7 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
 	private Properties properties;
 	private FileManager fileManager;
 	
-	public QueryExecutorImpl(){
+	public QueryServiceImpl(){
 		routingTable = RoutingTable.INSTANCE;
 		propertyLoader = new PropertyLoader();
 		fileManager = new FileManager();
@@ -40,7 +40,7 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
         transport = new TSocket(ip, port);
         transport.open();
         TProtocol protocol = new TBinaryProtocol(transport);
-        QueryExecutor.Client client = new QueryExecutor.Client(protocol);
+        QueryService.Client client = new QueryService.Client(protocol);
         client.join(nodeIP, nodePort);
 		
 	}
@@ -60,8 +60,8 @@ public class QueryExecutorImpl implements QueryExecutor.Iface {
         transport2.open();
         TProtocol protocol1 = new TBinaryProtocol(transport1);
         TProtocol protocol2 = new TBinaryProtocol(transport2);
-        QueryExecutor.Client client1 = new QueryExecutor.Client(protocol1);
-        QueryExecutor.Client client2 = new QueryExecutor.Client(protocol2);
+        QueryService.Client client1 = new QueryService.Client(protocol1);
+        QueryService.Client client2 = new QueryService.Client(protocol2);
         client1.join(nodeIP, nodePort);;
         client2.join(nodeIP, nodePort);
 		

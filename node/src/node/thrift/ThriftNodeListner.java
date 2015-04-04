@@ -32,13 +32,13 @@ public class ThriftNodeListner implements Runnable {
 	}
 
 	public void run() {
-		QueryExecutorImpl handler;
-		node.thrift.QueryExecutor.Processor processor;
+		QueryServiceImpl handler;
+		node.thrift.QueryService.Processor processor;
 
 		try {
 
-			handler = new QueryExecutorImpl();
-			processor = new node.thrift.QueryExecutor.Processor(handler);
+			handler = new QueryServiceImpl();
+			processor = new node.thrift.QueryService.Processor(handler);
 
 			TServerTransport serverTransport = new TServerSocket(nodePort);
 			TServer server = new TSimpleServer(

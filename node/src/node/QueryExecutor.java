@@ -112,4 +112,8 @@ public class QueryExecutor {
 				+ " number of hops");
 		System.out.print("node>>>");
 	}
+	
+	//Thrift methods
+	
+	
 }

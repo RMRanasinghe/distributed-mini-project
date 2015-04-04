@@ -7,6 +7,14 @@ import java.net.SocketException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import node.thrift.QueryExecutorImpl;
+
+import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TServer.AbstractServerArgs;
+import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TServerTransport;
+
 public class NodeListner implements Runnable {
 	private Thread thread;
 	private static final Logger log = Logger.getLogger(NodeListner.class
@@ -23,6 +31,7 @@ public class NodeListner implements Runnable {
 	}
 
 	public void run() {
+		
 		DatagramSocket serverSocket;
 		QueryParser queryParser = new QueryParser();
 		try {
@@ -44,6 +53,7 @@ public class NodeListner implements Runnable {
 			log.info("message recieving failed");
 			System.out.println("node>>>");
 		}
+		
 		
 	}
 

@@ -12,6 +12,10 @@
     <path id="node.classpath">
         <pathelement location="bin"/>
         <path refid="JUnit 4.libraryclasspath"/>
+<pathelement location="elibs/libthrift-0.9.2.jar"/>
+        <pathelement location="elibs/slf4j-api-1.5.8.jar"/>
+        <pathelement location="elibs/slf4j-log4j12-1.5.8.jar"/>
+        <pathelement location="elibs/log4j-1.2.14.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>

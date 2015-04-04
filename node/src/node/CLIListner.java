@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import node.thrift.QueryServiceImpl;
+
 public class CLIListner implements Runnable {
 	private Thread thread;
 	private static final Logger log = Logger.getLogger(CLIListner.class
@@ -33,7 +35,12 @@ public class CLIListner implements Runnable {
 					System.out.println("Enter file name to search:");
 					String searchName = br.readLine().replace(" ", "_");
 					qe.fileSearch(searchName);
-				} else if(command.equalsIgnoreCase("Neighbours")){
+				} else if (command.equalsIgnoreCase("RPCSearch")) {
+					System.out.println("Enter file name to search:");
+					String searchName = br.readLine().replace(" ", "_");
+					qe.RPCFileSearch(searchName);
+
+				} else if (command.equalsIgnoreCase("Neighbours")) {
 					printNeighbourList();
 				} else {
 					System.out
@@ -54,20 +61,20 @@ public class CLIListner implements Runnable {
 		}
 	}
 
-	private void printFileList(){
+	private void printFileList() {
 		System.out.println("-----------File List-------------");
 		List<String> list = qe.getFileList();
-		for(String file:list){
+		for (String file : list) {
 			System.out.println(file);
 		}
 	}
-	private void printNeighbourList(){
+
+	private void printNeighbourList() {
 		System.out.println("-----------Routing Table-------------");
 		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
-		for(RoutingTableEntry rt : table){
-			System.out.println("IP : "+rt.IP+" Port : "+rt.port );
+		for (RoutingTableEntry rt : table) {
+			System.out.println("IP : " + rt.IP + " Port : " + rt.port);
 		}
 	}
-
 
 }

@@ -6,6 +6,10 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.thrift.TException;
+
+import node.thrift.QueryServiceImpl;
+
 public class QueryExecutor {
 
 	private RoutingTable routingTable;
@@ -114,6 +118,19 @@ public class QueryExecutor {
 	}
 	
 	//Thrift methods
+	public void RPCFileSearch(String fileName) {
+		int maxHops = Integer.parseInt(properties.getProperty("max.ttl"));
+		Random rand = new Random();
+		int id = rand.nextInt();// The probability of getting same number again
+								// is low
+		QueryServiceImpl qs =new QueryServiceImpl();
+		try {
+			qs.fileSearch(fileName, nodeIP, nodePort, id, maxHops);
+		} catch (TException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 }

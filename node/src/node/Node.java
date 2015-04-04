@@ -3,6 +3,8 @@ package node;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import node.thrift.ThriftNodeListner;
+
 public class Node {
 
 	private static final Logger log = Logger.getLogger( Node.class.getName() );
@@ -16,6 +18,9 @@ public class Node {
 		/*Start node listner thread*/
 		NodeListner nodeListner = NodeListner.INSTANCE;
 		nodeListner.start();
+		
+		ThriftNodeListner tnodeListner =ThriftNodeListner.INSTANCE;
+		tnodeListner.start();
 		
 		BSCommunicator bsCommunicator = BSCommunicator.INSTANCE;
 		String out = bsCommunicator.init();

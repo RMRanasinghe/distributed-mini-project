@@ -34,6 +34,7 @@ public class QueryServiceImpl implements QueryService.Iface {
 		nodeIP = properties.getProperty("node.internet.address");
 		nodePort = Integer.parseInt(properties
 				.getProperty("node.internet.port"));
+		sentIds = BoundedMessageIDBuffer.INSTANCE;
 	}
 	@Override
 	public void regOKSuccess1(String ip, int port) throws TException {

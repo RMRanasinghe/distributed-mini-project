@@ -66,7 +66,8 @@ public class QueryServiceImpl implements QueryService.Iface {
         transport2.open();
         TProtocol protocol1 = new TBinaryProtocol(transport1);
         TProtocol protocol2 = new TBinaryProtocol(transport2);
-        QueryService.Client client1 = new QueryService.Client(protocol1);
+        QuerySer
+		System.out.println("Wheeeeee ");vice.Client client1 = new QueryService.Client(protocol1);
         QueryService.Client client2 = new QueryService.Client(protocol2);
         client1.join(nodeIP, nodePort);;
         client2.join(nodeIP, nodePort);

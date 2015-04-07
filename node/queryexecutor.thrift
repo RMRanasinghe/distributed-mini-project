@@ -9,5 +9,5 @@ service QueryExecutor
 		void join(1:string ip, 2:int port),
 		void leave(1:string ip, 2:int port),
 		void fileSearch(1:string fileName, 2:string ip, 3:int port, 4:int id, 5:int hops)
-
+		void fileFound(1:list<string> fileList, 2:string searchIp, 3:int searchPort,4:string foundIp,5:int foundPort, 6:int id, 7:int hops)
 }

@@ -17,6 +17,7 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransportException;
 
 public class QueryServiceImpl implements QueryService.Iface {
 	private RoutingTable routingTable;
@@ -90,12 +91,13 @@ public class QueryServiceImpl implements QueryService.Iface {
 	@Override
 	public void fileSearch(String fileName, String ip, int port, int id,int hops)
 			throws TException {
+		System.out.println("Wheeeeee ");
 			if (sentIds.contains(id)) {
 				return;
 			}sentIds.add(id);
 			LinkedList<String> fileNames = fileManager.find(fileName);
 			if (!fileNames.isEmpty()) {
-				fileFound(ip, port, fileNames, hops-1);
+				fileFound(fileNames,ip, port,nodeIP,nodePort,id, hops-1);
 			} else {
 				if (hops != 0) {
 					//String searchQuery = queryGenerator.getSearch(ip, port,
@@ -105,26 +107,42 @@ public class QueryServiceImpl implements QueryService.Iface {
 					for (RoutingTableEntry connectedNode : connectedNodes) {
 						//nodeCommunicator.send(connectedNode.IP, connectedNode.port,
 								//searchQuery);
-						transport = new TSocket(ip, port);
+						transport = new TSocket(connectedNode.IP, connectedNode.port);
 				        transport.open();
 				        TProtocol protocol = new TBinaryProtocol(transport);
 				        QueryService.Client client = new QueryService.Client(protocol);
-				        client.fileSearch(fileName,connectedNode.IP, connectedNode.port,id,hops-1);
+				        client.fileSearch(fileName,ip, port,id,hops-1);
 					}
 				}
 			}
 			
 		}
-		public void fileFound(String ip, int port, List<String> files, int hops) {
-			System.out.println("File(s) found:");
-			System.out.print("File names: ");
-			for (String file : files) {
-				System.out.print(file + " ");
-			}
-			System.out.println();
-			System.out.println("At ip: " + ip + "port: " + port + " within " + hops
-					+ " number of hops");
-			System.out.print("node>>>");
+	@Override
+	public void fileFound(List<String> fileList, String searchIp,
+			int searchPort, String foundIp, int foundPort, int id, int hops)
+			throws TException {
+		System.out.println("File(s) found:");
+		System.out.print("File names: ");
+		for (String file : fileList) {
+			System.out.print(file + " ");
 		}
+		System.out.println();
+		System.out.println("At ip: " + foundIp + "port: " + foundPort + " within " + hops
+				+ " number of hops");
+		if(nodeIP!=searchIp && nodePort!=searchPort){
+		TTransport transport = new TSocket(searchIp, searchPort);
+        try {
+			transport.open();
+			TProtocol protocol = new TBinaryProtocol(transport);
+	        QueryService.Client client = new QueryService.Client(protocol); 
+	        client.fileFound(fileList, searchIp, searchPort,foundIp,foundPort, id, hops);
+        } catch (TTransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		System.out.print("node>>>");
+		
+	}
 
 }

@@ -58,9 +58,9 @@ public class BSCommunicator {
 
 		try {
 			clientSocket = new Socket(BSAddress, BSPort);
-			DataOutputStream outToServer = new DataOutputStream(
-					clientSocket.getOutputStream());
-			outToServer.writeBytes(sentence);
+			OutputStream outToServer = clientSocket.getOutputStream();
+			PrintStream out = new PrintStream(outToServer);
+			out.print(sentence);
 
 		} catch (UnknownHostException e) {
 			log.severe("Connection to boostrap server failed");

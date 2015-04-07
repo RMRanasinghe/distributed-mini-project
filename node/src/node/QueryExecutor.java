@@ -21,6 +21,9 @@ public class QueryExecutor {
 	private String nodeIP;
 	private int nodePort;
 	private BoundedMessageIDBuffer sentIds;
+	private String BSIp;
+	private int BSPort;
+	private String username;
 
 	public QueryExecutor() {
 		routingTable = RoutingTable.INSTANCE;
@@ -33,6 +36,10 @@ public class QueryExecutor {
 		nodePort = Integer.parseInt(properties
 				.getProperty("node.internet.port"));
 		sentIds = BoundedMessageIDBuffer.INSTANCE;
+		BSPort =Integer.parseInt(properties
+				.getProperty("bs.internet.port"));
+		BSIp = properties.getProperty("bs.internet.ip");
+		username = properties.getProperty("node.username");
 	}
 
 	public void regOKSuccess(String ip, int port) {
@@ -115,6 +122,12 @@ public class QueryExecutor {
 		System.out.println("At ip: " + ip + "port: " + port + " within " + hops
 				+ " number of hops");
 		System.out.print("node>>>");
+	}
+	public void sendLeave(String ip, int port) {
+		nodeCommunicator.send(ip, port, queryGenerator.getLeave(nodeIP,nodePort));
+	}
+	public void sendLeaveToBS() {
+		nodeCommunicator.send(BSIp, BSPort, queryGenerator.getBSUnRegister(nodeIP, nodePort,username ));
 	}
 	
 	//Thrift methods

@@ -261,14 +261,8 @@ int sendpeerlist(int sockfd, char key[8]) {
 		msglen = 12;
 	} else {
 		retvalue = sprintf(message, "0000 REGOK %d", (no_peers - 1));
-		if (no_peers <= 10) //only 9 peers will be send if there are 10. Skip own entry
-			msglen = 12;
-		else if (no_peers <= 100) // only 99 peers will be send.
-			msglen = 13;
-		else if (no_peers <= 1000)
-			msglen = 14;
-		else
-			msglen = 15;
+		msglen = 12;
+		
 
 		if (no_peers == 2) {
 			count = 1;
@@ -283,8 +277,8 @@ int sendpeerlist(int sockfd, char key[8]) {
 					&& (strcmp(peer_table[i].key, key2) != 0)) {
 				retvalue = sprintf(tmpmsg, " %s %d %s", peer_table[i].IP,
 						peer_table[i].port, peer_table[i].key);
-				memcpy(&message[msglen], tmpmsg, (strlen(tmpmsg))); //modified version orginal:strlen(tmpmsg) - 1
-				msglen += (strlen(tmpmsg)); //modified version
+				memcpy(&message[msglen], tmpmsg, (strlen(tmpmsg)-1)); //modified version orginal:strlen(tmpmsg) - 1
+				msglen += (strlen(tmpmsg)-1); //modified version
 				strcpy(key2, peer_table[i].key); //copy last key value
 				count--;
 			}

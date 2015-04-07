@@ -74,16 +74,19 @@ public class QueryServiceImpl implements QueryService.Iface {
 	}
 
 	@Override
-	public void join(String ip, int port) throws TException {
+	public String join(String ip, int port) throws TException {
 		RoutingTableEntry entry = new RoutingTableEntry(ip, port);
 		routingTable.add(entry);
+		return "JOINOK";
+		
 		
 		
 	}
 
 	@Override
-	public void leave(String ip, int port) throws TException {
+	public String leave(String ip, int port) throws TException {
 		routingTable.remove(ip, port);
+		return "LEAVEOK";
 		
 	}
 

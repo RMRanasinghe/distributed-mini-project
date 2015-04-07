@@ -86,5 +86,13 @@ public class CLIListner implements Runnable {
 		qe.sendLeaveToBS();
 		
 	}
+	private void RPCsendLeave(){
+		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
+		for(RoutingTableEntry rt : table){
+			qe.RPCsendLeave(rt.IP, rt.port);
+		}
+		qe.sendLeaveToBS();
+		
+	}
 
 }

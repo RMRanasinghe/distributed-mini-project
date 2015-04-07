@@ -7,7 +7,13 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 
+import node.thrift.QueryService;
 import node.thrift.QueryServiceImpl;
 
 public class QueryExecutor {
@@ -140,6 +146,48 @@ public class QueryExecutor {
 		try {
 			qs.fileSearch(fileName, nodeIP, nodePort, id, maxHops);
 		} catch (TException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void RPCjoin(String ip, int port) {
+		TTransport transport;
+		transport = new TSocket(ip, port);
+        try {
+			transport.open();
+		
+        TProtocol protocol = new TBinaryProtocol(transport);
+        QueryService.Client client = new QueryService.Client(protocol);
+        try {
+			client.join(nodeIP, nodePort);
+		} catch (TException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        transport.close();
+        } catch (TTransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void RPCsendLeave(String ip, int port) {
+		TTransport transport;
+		transport = new TSocket(ip, port);
+        try {
+			transport.open();
+		
+        TProtocol protocol = new TBinaryProtocol(transport);
+        QueryService.Client client = new QueryService.Client(protocol);
+        try {
+			client.leave(nodeIP, nodePort);
+		} catch (TException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        transport.close();
+        } catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

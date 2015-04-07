@@ -43,9 +43,9 @@ public class QueryService {
 
     public void regOKSuccess2(String ip1, int port1, String ip2, int port2) throws org.apache.thrift.TException;
 
-    public void join(String ip, int port) throws org.apache.thrift.TException;
+    public String join(String ip, int port) throws org.apache.thrift.TException;
 
-    public void leave(String ip, int port) throws org.apache.thrift.TException;
+    public String leave(String ip, int port) throws org.apache.thrift.TException;
 
     public void fileSearch(String fileName, String ip, int port, int id, int hops) throws org.apache.thrift.TException;
 
@@ -133,10 +133,10 @@ public class QueryService {
       return;
     }
 
-    public void join(String ip, int port) throws org.apache.thrift.TException
+    public String join(String ip, int port) throws org.apache.thrift.TException
     {
       send_join(ip, port);
-      recv_join();
+      return recv_join();
     }
 
     public void send_join(String ip, int port) throws org.apache.thrift.TException
@@ -147,17 +147,20 @@ public class QueryService {
       sendBase("join", args);
     }
 
-    public void recv_join() throws org.apache.thrift.TException
+    public String recv_join() throws org.apache.thrift.TException
     {
       join_result result = new join_result();
       receiveBase(result, "join");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "join failed: unknown result");
     }
 
-    public void leave(String ip, int port) throws org.apache.thrift.TException
+    public String leave(String ip, int port) throws org.apache.thrift.TException
     {
       send_leave(ip, port);
-      recv_leave();
+      return recv_leave();
     }
 
     public void send_leave(String ip, int port) throws org.apache.thrift.TException
@@ -168,11 +171,14 @@ public class QueryService {
       sendBase("leave", args);
     }
 
-    public void recv_leave() throws org.apache.thrift.TException
+    public String recv_leave() throws org.apache.thrift.TException
     {
       leave_result result = new leave_result();
       receiveBase(result, "leave");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "leave failed: unknown result");
     }
 
     public void fileSearch(String fileName, String ip, int port, int id, int hops) throws org.apache.thrift.TException
@@ -328,13 +334,13 @@ public class QueryService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws org.apache.thrift.TException {
+      public String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_join();
+        return (new Client(prot)).recv_join();
       }
     }
 
@@ -363,13 +369,13 @@ public class QueryService {
         prot.writeMessageEnd();
       }
 
-      public void getResult() throws org.apache.thrift.TException {
+      public String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_leave();
+        return (new Client(prot)).recv_leave();
       }
     }
 
@@ -542,7 +548,7 @@ public class QueryService {
 
       public join_result getResult(I iface, join_args args) throws org.apache.thrift.TException {
         join_result result = new join_result();
-        iface.join(args.ip, args.port);
+        result.success = iface.join(args.ip, args.port);
         return result;
       }
     }
@@ -562,7 +568,7 @@ public class QueryService {
 
       public leave_result getResult(I iface, leave_args args) throws org.apache.thrift.TException {
         leave_result result = new leave_result();
-        iface.leave(args.ip, args.port);
+        result.success = iface.leave(args.ip, args.port);
         return result;
       }
     }
@@ -727,7 +733,7 @@ public class QueryService {
       }
     }
 
-    public static class join<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, join_args, Void> {
+    public static class join<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, join_args, String> {
       public join() {
         super("join");
       }
@@ -736,11 +742,12 @@ public class QueryService {
         return new join_args();
       }
 
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<String> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new AsyncMethodCallback<String>() { 
+          public void onComplete(String o) {
             join_result result = new join_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -772,12 +779,12 @@ public class QueryService {
         return false;
       }
 
-      public void start(I iface, join_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+      public void start(I iface, join_args args, org.apache.thrift.async.AsyncMethodCallback<String> resultHandler) throws TException {
         iface.join(args.ip, args.port,resultHandler);
       }
     }
 
-    public static class leave<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, leave_args, Void> {
+    public static class leave<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, leave_args, String> {
       public leave() {
         super("leave");
       }
@@ -786,11 +793,12 @@ public class QueryService {
         return new leave_args();
       }
 
-      public AsyncMethodCallback<Void> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
+      public AsyncMethodCallback<String> getResultHandler(final AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new AsyncMethodCallback<String>() { 
+          public void onComplete(String o) {
             leave_result result = new leave_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
               return;
@@ -822,7 +830,7 @@ public class QueryService {
         return false;
       }
 
-      public void start(I iface, leave_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
+      public void start(I iface, leave_args args, org.apache.thrift.async.AsyncMethodCallback<String> resultHandler) throws TException {
         iface.leave(args.ip, args.port,resultHandler);
       }
     }
@@ -2980,6 +2988,7 @@ public class QueryService {
   public static class join_result implements org.apache.thrift.TBase<join_result, join_result._Fields>, java.io.Serializable, Cloneable, Comparable<join_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("join_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -2987,10 +2996,11 @@ public class QueryService {
       schemes.put(TupleScheme.class, new join_resultTupleSchemeFactory());
     }
 
+    public String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -3005,6 +3015,8 @@ public class QueryService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -3043,9 +3055,13 @@ public class QueryService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(join_result.class, metaDataMap);
     }
@@ -3053,10 +3069,20 @@ public class QueryService {
     public join_result() {
     }
 
+    public join_result(
+      String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public join_result(join_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public join_result deepCopy() {
@@ -3065,15 +3091,51 @@ public class QueryService {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public String getSuccess() {
+      return this.success;
+    }
+
+    public join_result setSuccess(String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((String)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new IllegalStateException();
     }
@@ -3085,6 +3147,8 @@ public class QueryService {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -3102,12 +3166,26 @@ public class QueryService {
       if (that == null)
         return false;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true && (isSetSuccess());
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
 
       return list.hashCode();
     }
@@ -3120,6 +3198,16 @@ public class QueryService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3140,6 +3228,13 @@ public class QueryService {
       StringBuilder sb = new StringBuilder("join_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3183,6 +3278,14 @@ public class QueryService {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3198,6 +3301,11 @@ public class QueryService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3215,11 +3323,24 @@ public class QueryService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, join_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, join_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -3692,6 +3813,7 @@ public class QueryService {
   public static class leave_result implements org.apache.thrift.TBase<leave_result, leave_result._Fields>, java.io.Serializable, Cloneable, Comparable<leave_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("leave_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -3699,10 +3821,11 @@ public class QueryService {
       schemes.put(TupleScheme.class, new leave_resultTupleSchemeFactory());
     }
 
+    public String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -3717,6 +3840,8 @@ public class QueryService {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -3755,9 +3880,13 @@ public class QueryService {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(leave_result.class, metaDataMap);
     }
@@ -3765,10 +3894,20 @@ public class QueryService {
     public leave_result() {
     }
 
+    public leave_result(
+      String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public leave_result(leave_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public leave_result deepCopy() {
@@ -3777,15 +3916,51 @@ public class QueryService {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public String getSuccess() {
+      return this.success;
+    }
+
+    public leave_result setSuccess(String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((String)value);
+        }
+        break;
+
       }
     }
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new IllegalStateException();
     }
@@ -3797,6 +3972,8 @@ public class QueryService {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new IllegalStateException();
     }
@@ -3814,12 +3991,26 @@ public class QueryService {
       if (that == null)
         return false;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       List<Object> list = new ArrayList<Object>();
+
+      boolean present_success = true && (isSetSuccess());
+      list.add(present_success);
+      if (present_success)
+        list.add(success);
 
       return list.hashCode();
     }
@@ -3832,6 +4023,16 @@ public class QueryService {
 
       int lastComparison = 0;
 
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3852,6 +4053,13 @@ public class QueryService {
       StringBuilder sb = new StringBuilder("leave_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3895,6 +4103,14 @@ public class QueryService {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3910,6 +4126,11 @@ public class QueryService {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3927,11 +4148,24 @@ public class QueryService {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, leave_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, leave_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 

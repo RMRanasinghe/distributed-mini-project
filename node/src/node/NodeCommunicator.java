@@ -14,6 +14,27 @@ public class NodeCommunicator {
 
 	private NodeCommunicator() {
 	}
+	public void sendToBS(String ip, int port, String message) {
+		Socket clientSocket = null;
+		try {
+			clientSocket = new Socket(ip, port);
+			OutputStream outToServer = clientSocket.getOutputStream();
+			PrintStream out = new PrintStream(outToServer);
+			out.print(message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if (clientSocket != null) {
+				try {
+					clientSocket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	public void send(String ip, int port, String message) {
 

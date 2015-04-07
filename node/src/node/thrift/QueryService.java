@@ -178,7 +178,6 @@ public class QueryService {
     public void fileSearch(String fileName, String ip, int port, int id, int hops) throws org.apache.thrift.TException
     {
       send_fileSearch(fileName, ip, port, id, hops);
-      recv_fileSearch();
     }
 
     public void send_fileSearch(String fileName, String ip, int port, int id, int hops) throws org.apache.thrift.TException
@@ -192,17 +191,9 @@ public class QueryService {
       sendBase("fileSearch", args);
     }
 
-    public void recv_fileSearch() throws org.apache.thrift.TException
-    {
-      fileSearch_result result = new fileSearch_result();
-      receiveBase(result, "fileSearch");
-      return;
-    }
-
     public void fileFound(List<String> fileList, String searchIp, int searchPort, String foundIp, int foundPort, int id, int hops) throws org.apache.thrift.TException
     {
       send_fileFound(fileList, searchIp, searchPort, foundIp, foundPort, id, hops);
-      recv_fileFound();
     }
 
     public void send_fileFound(List<String> fileList, String searchIp, int searchPort, String foundIp, int foundPort, int id, int hops) throws org.apache.thrift.TException
@@ -216,13 +207,6 @@ public class QueryService {
       args.setId(id);
       args.setHops(hops);
       sendBase("fileFound", args);
-    }
-
-    public void recv_fileFound() throws org.apache.thrift.TException
-    {
-      fileFound_result result = new fileFound_result();
-      receiveBase(result, "fileFound");
-      return;
     }
 
   }
@@ -403,7 +387,7 @@ public class QueryService {
       private int id;
       private int hops;
       public fileSearch_call(String fileName, String ip, int port, int id, int hops, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
+        super(client, protocolFactory, transport, resultHandler, true);
         this.fileName = fileName;
         this.ip = ip;
         this.port = port;
@@ -412,7 +396,7 @@ public class QueryService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("fileSearch", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("fileSearch", org.apache.thrift.protocol.TMessageType.ONEWAY, 0));
         fileSearch_args args = new fileSearch_args();
         args.setFileName(fileName);
         args.setIp(ip);
@@ -429,7 +413,6 @@ public class QueryService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_fileSearch();
       }
     }
 
@@ -449,7 +432,7 @@ public class QueryService {
       private int id;
       private int hops;
       public fileFound_call(List<String> fileList, String searchIp, int searchPort, String foundIp, int foundPort, int id, int hops, org.apache.thrift.async.AsyncMethodCallback resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
+        super(client, protocolFactory, transport, resultHandler, true);
         this.fileList = fileList;
         this.searchIp = searchIp;
         this.searchPort = searchPort;
@@ -460,7 +443,7 @@ public class QueryService {
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("fileFound", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("fileFound", org.apache.thrift.protocol.TMessageType.ONEWAY, 0));
         fileFound_args args = new fileFound_args();
         args.setFileList(fileList);
         args.setSearchIp(searchIp);
@@ -479,7 +462,6 @@ public class QueryService {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_fileFound();
       }
     }
 
@@ -595,13 +577,12 @@ public class QueryService {
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
-      public fileSearch_result getResult(I iface, fileSearch_args args) throws org.apache.thrift.TException {
-        fileSearch_result result = new fileSearch_result();
+      public org.apache.thrift.TBase getResult(I iface, fileSearch_args args) throws org.apache.thrift.TException {
         iface.fileSearch(args.fileName, args.ip, args.port, args.id, args.hops);
-        return result;
+        return null;
       }
     }
 
@@ -615,13 +596,12 @@ public class QueryService {
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
-      public fileFound_result getResult(I iface, fileFound_args args) throws org.apache.thrift.TException {
-        fileFound_result result = new fileFound_result();
+      public org.apache.thrift.TBase getResult(I iface, fileFound_args args) throws org.apache.thrift.TException {
         iface.fileFound(args.fileList, args.searchIp, args.searchPort, args.foundIp, args.foundPort, args.id, args.hops);
-        return result;
+        return null;
       }
     }
 
@@ -860,36 +840,14 @@ public class QueryService {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            fileSearch_result result = new fileSearch_result();
-            try {
-              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-              return;
-            } catch (Exception e) {
-              LOGGER.error("Exception writing to internal frame buffer", e);
-            }
-            fb.close();
           }
           public void onError(Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TBase msg;
-            fileSearch_result result = new fileSearch_result();
-            {
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-              return;
-            } catch (Exception ex) {
-              LOGGER.error("Exception writing to internal frame buffer", ex);
-            }
-            fb.close();
           }
         };
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
       public void start(I iface, fileSearch_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
@@ -910,36 +868,14 @@ public class QueryService {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            fileFound_result result = new fileFound_result();
-            try {
-              fcall.sendResponse(fb,result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-              return;
-            } catch (Exception e) {
-              LOGGER.error("Exception writing to internal frame buffer", e);
-            }
-            fb.close();
           }
           public void onError(Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TBase msg;
-            fileFound_result result = new fileFound_result();
-            {
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TBase)new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-              return;
-            } catch (Exception ex) {
-              LOGGER.error("Exception writing to internal frame buffer", ex);
-            }
-            fb.close();
           }
         };
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
       public void start(I iface, fileFound_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws TException {
@@ -4768,254 +4704,6 @@ public class QueryService {
 
   }
 
-  public static class fileSearch_result implements org.apache.thrift.TBase<fileSearch_result, fileSearch_result._Fields>, java.io.Serializable, Cloneable, Comparable<fileSearch_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("fileSearch_result");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new fileSearch_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new fileSearch_resultTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(fileSearch_result.class, metaDataMap);
-    }
-
-    public fileSearch_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public fileSearch_result(fileSearch_result other) {
-    }
-
-    public fileSearch_result deepCopy() {
-      return new fileSearch_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof fileSearch_result)
-        return this.equals((fileSearch_result)that);
-      return false;
-    }
-
-    public boolean equals(fileSearch_result that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      List<Object> list = new ArrayList<Object>();
-
-      return list.hashCode();
-    }
-
-    @Override
-    public int compareTo(fileSearch_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("fileSearch_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class fileSearch_resultStandardSchemeFactory implements SchemeFactory {
-      public fileSearch_resultStandardScheme getScheme() {
-        return new fileSearch_resultStandardScheme();
-      }
-    }
-
-    private static class fileSearch_resultStandardScheme extends StandardScheme<fileSearch_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, fileSearch_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, fileSearch_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class fileSearch_resultTupleSchemeFactory implements SchemeFactory {
-      public fileSearch_resultTupleScheme getScheme() {
-        return new fileSearch_resultTupleScheme();
-      }
-    }
-
-    private static class fileSearch_resultTupleScheme extends TupleScheme<fileSearch_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, fileSearch_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, fileSearch_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-      }
-    }
-
-  }
-
   public static class fileFound_args implements org.apache.thrift.TBase<fileFound_args, fileFound_args._Fields>, java.io.Serializable, Cloneable, Comparable<fileFound_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("fileFound_args");
 
@@ -6031,254 +5719,6 @@ public class QueryService {
           struct.hops = iprot.readI32();
           struct.setHopsIsSet(true);
         }
-      }
-    }
-
-  }
-
-  public static class fileFound_result implements org.apache.thrift.TBase<fileFound_result, fileFound_result._Fields>, java.io.Serializable, Cloneable, Comparable<fileFound_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("fileFound_result");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new fileFound_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new fileFound_resultTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(fileFound_result.class, metaDataMap);
-    }
-
-    public fileFound_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public fileFound_result(fileFound_result other) {
-    }
-
-    public fileFound_result deepCopy() {
-      return new fileFound_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof fileFound_result)
-        return this.equals((fileFound_result)that);
-      return false;
-    }
-
-    public boolean equals(fileFound_result that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      List<Object> list = new ArrayList<Object>();
-
-      return list.hashCode();
-    }
-
-    @Override
-    public int compareTo(fileFound_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("fileFound_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class fileFound_resultStandardSchemeFactory implements SchemeFactory {
-      public fileFound_resultStandardScheme getScheme() {
-        return new fileFound_resultStandardScheme();
-      }
-    }
-
-    private static class fileFound_resultStandardScheme extends StandardScheme<fileFound_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, fileFound_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, fileFound_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class fileFound_resultTupleSchemeFactory implements SchemeFactory {
-      public fileFound_resultTupleScheme getScheme() {
-        return new fileFound_resultTupleScheme();
-      }
-    }
-
-    private static class fileFound_resultTupleScheme extends TupleScheme<fileFound_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, fileFound_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, fileFound_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 

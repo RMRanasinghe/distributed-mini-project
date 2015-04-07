@@ -91,13 +91,14 @@ public class QueryServiceImpl implements QueryService.Iface {
 	@Override
 	public void fileSearch(String fileName, String ip, int port, int id,int hops)
 			throws TException {
-		System.out.println("Wheeeeee ");
 			if (sentIds.contains(id)) {
 				return;
 			}sentIds.add(id);
 			LinkedList<String> fileNames = fileManager.find(fileName);
 			if (!fileNames.isEmpty()) {
+				System.out.println("f1");
 				fileFound(fileNames,ip, port,nodeIP,nodePort,id, hops-1);
+				System.out.println("f2");
 			} else {
 				if (hops != 0) {
 					//String searchQuery = queryGenerator.getSearch(ip, port,
@@ -107,11 +108,15 @@ public class QueryServiceImpl implements QueryService.Iface {
 					for (RoutingTableEntry connectedNode : connectedNodes) {
 						//nodeCommunicator.send(connectedNode.IP, connectedNode.port,
 								//searchQuery);
+						if(nodeIP!=connectedNode.IP && nodePort!=connectedNode.port){
 						transport = new TSocket(connectedNode.IP, connectedNode.port);
 				        transport.open();
 				        TProtocol protocol = new TBinaryProtocol(transport);
 				        QueryService.Client client = new QueryService.Client(protocol);
+				        //System.out.println("IP "+connectedNode.IP+"  "+"PORT "+connectedNode.port);
 				        client.fileSearch(fileName,ip, port,id,hops-1);
+				        transport.close();
+						}
 					}
 				}
 			}
@@ -139,6 +144,8 @@ public class QueryServiceImpl implements QueryService.Iface {
         } catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			transport.close();
 		}
 		}
 		System.out.print("node>>>");

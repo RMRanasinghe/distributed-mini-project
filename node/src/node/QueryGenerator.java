@@ -7,7 +7,7 @@ public class QueryGenerator {
 		return addLength("REG " + IP + " " + port + " " + username);
 	}
 	public String getBSUnRegister(String IP, int port, String username) {
-		return addLength("UNREG " + IP + " " + port);
+		return addLength("UNREG " + IP + " " + port + " "+username);
 	}
 	public String getJoin(String IP, int port) {
 		return addLength("JOIN " + IP + " " + port);

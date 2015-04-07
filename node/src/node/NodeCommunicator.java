@@ -1,9 +1,12 @@
 package node;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Logger;
 
@@ -13,6 +16,28 @@ public class NodeCommunicator {
 			.getName());
 
 	private NodeCommunicator() {
+	}
+
+	public void sendToBS(String ip, int port, String message) {
+		Socket clientSocket = null;
+		try {
+			clientSocket = new Socket(ip, port);
+			OutputStream outToServer = clientSocket.getOutputStream();
+			PrintStream out = new PrintStream(outToServer);
+			out.print(message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if (clientSocket != null) {
+				try {
+					clientSocket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public void send(String ip, int port, String message) {
@@ -27,11 +52,10 @@ public class NodeCommunicator {
 						new InetSocketAddress(ip, port));
 				socket = new DatagramSocket();
 				socket.send(packet);
-				log.info("packet sent to: "+ip+" successfully");
+				log.info("packet sent to: " + ip + " successfully");
 			} catch (SocketException e) {
 				log.warning("message '" + message + "' did not get delivered!");
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				log.warning("message '" + message + "' did not get delivered!");
 			}
 		} finally {

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Properties;
@@ -58,10 +60,10 @@ public class BSCommunicator {
 
 		try {
 			clientSocket = new Socket(BSAddress, BSPort);
-			DataOutputStream outToServer = new DataOutputStream(
-					clientSocket.getOutputStream());
-			outToServer.writeBytes(sentence);
-
+			OutputStream outToServer = clientSocket.getOutputStream();
+			PrintStream out = new PrintStream(outToServer);
+			out.print(sentence);
+			
 		} catch (UnknownHostException e) {
 			log.severe("Connection to boostrap server failed");
 			System.exit(0);

@@ -17,6 +17,9 @@ public class QueryExecutor {
 	private String nodeIP;
 	private int nodePort;
 	private BoundedMessageIDBuffer sentIds;
+	private String BSIp;
+	private int BSPort;
+	private String username;
 
 	public QueryExecutor() {
 		routingTable = RoutingTable.INSTANCE;
@@ -29,6 +32,12 @@ public class QueryExecutor {
 		nodePort = Integer.parseInt(properties
 				.getProperty("node.internet.port"));
 		sentIds = BoundedMessageIDBuffer.INSTANCE;
+		BSPort =Integer.parseInt(properties
+				.getProperty("bs.internet.port"));
+		BSIp = properties.getProperty("bs.internet.ip");
+		username = properties.getProperty("node.username");
+				
+		
 	}
 
 	public void regOKSuccess(String ip, int port) {
@@ -63,6 +72,12 @@ public class QueryExecutor {
 		routingTable.remove(ip, port);
 
 		nodeCommunicator.send(ip, port, queryGenerator.getLeaveOK(0));
+	}
+	public void sendLeave(String ip, int port) {
+		nodeCommunicator.send(ip, port, queryGenerator.getLeave(nodeIP,nodePort));
+	}
+	public void sendLeaveToBS() {
+		nodeCommunicator.send(BSIp, BSPort, queryGenerator.getBSUnRegister(nodeIP, nodePort,username ));
 	}
 
 	public void fileSearch(String fileName) {

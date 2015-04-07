@@ -35,7 +35,9 @@ public class CLIListner implements Runnable {
 					qe.fileSearch(searchName);
 				} else if(command.equalsIgnoreCase("Neighbours")){
 					printNeighbourList();
-				} else {
+				} else if(command.equalsIgnoreCase("Leave")){
+					sendLeave();
+				}else {
 					System.out
 							.println("Incorrect command. Please enter a valid command");
 				}
@@ -67,6 +69,14 @@ public class CLIListner implements Runnable {
 		for(RoutingTableEntry rt : table){
 			System.out.println("IP : "+rt.IP+" Port : "+rt.port );
 		}
+	}
+	private void sendLeave(){
+		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
+		for(RoutingTableEntry rt : table){
+			qe.sendLeave(rt.IP, rt.port);
+		}
+		qe.sendLeaveToBS();
+		
 	}
 
 

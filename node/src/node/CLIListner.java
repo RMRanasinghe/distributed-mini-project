@@ -44,6 +44,8 @@ public class CLIListner implements Runnable {
 					printNeighbourList();
 				}else if(command.equalsIgnoreCase("Leave")){
 					sendLeave();
+				}else if(command.equalsIgnoreCase("RPCLeave")){
+					RPCsendLeave();
 				}else {
 					System.out
 							.println("Incorrect command. Please enter a valid command");

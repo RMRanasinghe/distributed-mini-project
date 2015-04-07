@@ -169,6 +169,8 @@ public class QueryExecutor {
         } catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			transport.close();
 		}
 	}
 
@@ -190,6 +192,8 @@ public class QueryExecutor {
         } catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			transport.close();
 		}
 	}
 	

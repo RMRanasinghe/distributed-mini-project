@@ -13,6 +13,7 @@ public class CLIListner implements Runnable {
 			.getName());
 	public final static CLIListner INSTANCE = new CLIListner();
 	private QueryExecutor qe;
+	private Test test = new Test();
 
 	private CLIListner() {
 		qe = new QueryExecutor();
@@ -33,11 +34,20 @@ public class CLIListner implements Runnable {
 					System.out.println("Enter file name to search:");
 					String searchName = br.readLine().replace(" ", "_");
 					qe.fileSearch(searchName);
-				} else if(command.equalsIgnoreCase("Neighbours")){
+				} else if (command.equalsIgnoreCase("Neighbours")) {
 					printNeighbourList();
-				} else if(command.equalsIgnoreCase("Leave")){
+				} else if (command.equalsIgnoreCase("Leave")) {
 					sendLeave();
-				}else {
+				} else if (command.equalsIgnoreCase("testStart")) {
+					try {
+						test.start();
+					} catch (InterruptedException e) {
+					}
+				} else if (command.equalsIgnoreCase("testPrint")) {
+					test.print();
+				} else if (command.equalsIgnoreCase("testClean")) {
+					test.clean();
+				} else {
 					System.out
 							.println("Incorrect command. Please enter a valid command");
 				}
@@ -56,28 +66,29 @@ public class CLIListner implements Runnable {
 		}
 	}
 
-	private void printFileList(){
+	private void printFileList() {
 		System.out.println("-----------File List-------------");
 		List<String> list = qe.getFileList();
-		for(String file:list){
+		for (String file : list) {
 			System.out.println(file);
 		}
 	}
-	private void printNeighbourList(){
+
+	private void printNeighbourList() {
 		System.out.println("-----------Routing Table-------------");
 		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
-		for(RoutingTableEntry rt : table){
-			System.out.println("IP : "+rt.IP+" Port : "+rt.port );
+		for (RoutingTableEntry rt : table) {
+			System.out.println("IP : " + rt.IP + " Port : " + rt.port);
 		}
 	}
-	private void sendLeave(){
+
+	private void sendLeave() {
 		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
-		for(RoutingTableEntry rt : table){
+		for (RoutingTableEntry rt : table) {
 			qe.sendLeave(rt.IP, rt.port);
 		}
 		qe.sendLeaveToBS();
-		
-	}
 
+	}
 
 }

@@ -94,11 +94,20 @@ public class QueryParser {
 				String fileName = tokens[4];
 				int hops = Integer.parseInt(tokens[5]);
 				int messageId = Integer.parseInt(tokens[6]);
-
+				
+				//For testing purposes
+				if(!Test.messages.containsKey(fileName)){
+					Test.messages.put(fileName, 1);
+				}
+				else{
+					Test.messages.put(fileName, Test.messages.get(fileName)+1);
+				}
+				
 				qe.fileSearch(fileName, ip, port, messageId, hops);
 
 			}
 			if (command.equals("SEROK")) {
+				
 				int noOfFiles = Integer.parseInt(tokens[2]);
 				String ip = tokens[3];
 				int port = Integer.parseInt(tokens[4]);
@@ -107,8 +116,15 @@ public class QueryParser {
 
 				for (int i = 0; i < noOfFiles; ++i) {
 					files.add(tokens[6 + i]);
+					
+					//Testing 
+					if(!Test.minhops.containsKey(tokens[6 + i])){
+						Test.minhops.put(tokens[6 + i], 10-hops);
+					}
 				}
 
+				
+				
 				qe.fileFound(ip, port, files, hops);
 			}
 

@@ -34,7 +34,7 @@ public class QueryExecutor {
 		sentIds = BoundedMessageIDBuffer.INSTANCE;
 		BSPort =Integer.parseInt(properties
 				.getProperty("bs.internet.port"));
-		BSIp = properties.getProperty("bs.internet.ip");
+		BSIp = properties.getProperty("bs.internet.address");
 		username = properties.getProperty("node.username");
 				
 		
@@ -77,7 +77,7 @@ public class QueryExecutor {
 		nodeCommunicator.send(ip, port, queryGenerator.getLeave(nodeIP,nodePort));
 	}
 	public void sendLeaveToBS() {
-		nodeCommunicator.send(BSIp, BSPort, queryGenerator.getBSUnRegister(nodeIP, nodePort,username ));
+		nodeCommunicator.sendToBS(BSIp, BSPort, queryGenerator.getBSUnRegister(nodeIP, nodePort,username ));
 	}
 
 	public void fileSearch(String fileName) {

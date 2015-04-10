@@ -99,9 +99,7 @@ public class QueryServiceImpl implements QueryService.Iface {
 			}sentIds.add(id);
 			LinkedList<String> fileNames = fileManager.find(fileName);
 			if (!fileNames.isEmpty()) {
-				System.out.println("f1");
 				fileFound(fileNames,ip, port,nodeIP,nodePort,id, hops-1);
-				System.out.println("f2");
 			} else {
 				if (hops != 0) {
 					//String searchQuery = queryGenerator.getSearch(ip, port,
@@ -145,14 +143,11 @@ public class QueryServiceImpl implements QueryService.Iface {
 	        QueryService.Client client = new QueryService.Client(protocol); 
 	        client.fileFound(fileList, searchIp, searchPort,foundIp,foundPort, id, hops);
         } catch (TTransportException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			transport.close();
 		}
 		}
-		System.out.print("node>>>");
-		
 	}
 
 }

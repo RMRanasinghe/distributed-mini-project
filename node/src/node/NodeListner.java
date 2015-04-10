@@ -43,15 +43,12 @@ public class NodeListner implements Runnable {
 				serverSocket.receive(receivePacket);
 				String query = new String(receivePacket.getData());
 				log.info("Query recieved: "+query);
-				System.out.println("node>>>");
 				queryParser.parse(query);
 			}
 		} catch (SocketException e) {
 			log.info("message recieving failed");
-			System.out.println("node>>>");
 		} catch (IOException e) {
 			log.info("message recieving failed");
-			System.out.println("node>>>");
 		}
 		
 		

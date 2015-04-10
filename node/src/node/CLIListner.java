@@ -45,6 +45,8 @@ public class CLIListner implements Runnable {
 					sendLeave();
 				}else if(command.equalsIgnoreCase("RPCLeave")){
 					RPCsendLeave();
+				}else if(command.equalsIgnoreCase("Help")){
+					printHelp();
 				}else {
 					System.out
 							.println("Incorrect command. Please enter a valid command");
@@ -63,7 +65,16 @@ public class CLIListner implements Runnable {
 			thread.start();
 		}
 	}
-
+	private void printHelp(){
+		System.out.println("--------------------Command List--------------------");
+		System.out.println("1. Neighbours	- show peer table");
+		System.out.println("2. List		- show file list within node");
+		System.out.println("3. Search		- Enter file search mode");
+		System.out.println("4. RpcSearch	- Enter RPC file search mode");
+		System.out.println("5. Leave		- leave from network");
+		System.out.println("6. RpcLeave		- leave from network using RPC");
+		System.out.println("----------------------------------------------------");
+	}
 	private void printFileList() {
 		System.out.println("-----------File List-------------");
 		List<String> list = qe.getFileList();
@@ -85,7 +96,13 @@ public class CLIListner implements Runnable {
 			qe.sendLeave(rt.IP, rt.port);
 		}
 		qe.sendLeaveToBS();
-		
+		try {
+			thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}finally{
+			System.exit(0);
+		}
 	}
 	private void RPCsendLeave(){
 		Set<RoutingTableEntry> table = RoutingTable.INSTANCE.get();
@@ -93,7 +110,13 @@ public class CLIListner implements Runnable {
 			qe.RPCsendLeave(rt.IP, rt.port);
 		}
 		qe.sendLeaveToBS();
-		
+		try {
+			thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}finally{
+			System.exit(0);
+		}
 	}
 
 }

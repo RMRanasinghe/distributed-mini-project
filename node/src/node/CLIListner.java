@@ -26,7 +26,6 @@ public class CLIListner implements Runnable {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String command = null;
 		while (true) {
-			System.out.print("node>>> ");
 			try {
 				command = br.readLine();
 				if (command.equalsIgnoreCase("List")) {

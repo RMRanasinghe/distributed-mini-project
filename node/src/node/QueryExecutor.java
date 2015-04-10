@@ -127,7 +127,6 @@ public class QueryExecutor {
 		System.out.println();
 		System.out.println("At ip: " + ip + "port: " + port + " within " + hops
 				+ " number of hops");
-		System.out.print("node>>>");
 	}
 	public void sendLeave(String ip, int port) {
 		nodeCommunicator.send(ip, port, queryGenerator.getLeave(nodeIP,nodePort));
